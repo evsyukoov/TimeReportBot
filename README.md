@@ -1,2 +1,2 @@
 # TimeReportBot
-Bot for report working time
+Бот для учета рабочего времени
