@@ -1,5 +1,6 @@
 package bot;
 
+import hibernate.access.ProjectsDao;
 import hibernate.access.ReportDaysDao;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -46,6 +47,8 @@ public class ReportingBot extends TelegramLongPollingBot {
 //        Client client = ClientDao.getClient(1);
 //        System.out.println(client);
 
-        ReportDaysDao.createReportDay(1);
+//        ReportDaysDao.createReportDay(1);
+        //ProjectsDao.addProject("Проект 2");
+        ProjectsDao.getAllProjectsNames().forEach(pr -> System.out.println(pr.getProjectName()));
     }
 }
