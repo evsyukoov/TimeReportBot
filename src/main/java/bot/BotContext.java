@@ -1,42 +1,36 @@
 package bot;
 
-import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import hibernate.entities.Client;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class BotContext {
     private final ReportingBot bot;
-    private final Message message;
-    private final String token;
     private final Update update;
-    private final Chat chat;
+    private final Client client;
+    private final boolean callBackQuery;
 
-    public BotContext(ReportingBot bot, Message message,
-                      String token, Update update, Chat chat) {
+
+    public BotContext(ReportingBot bot, Update update,
+                      Client client, boolean callBackQuery) {
         this.bot = bot;
-        this.message = message;
-        this.token = token;
         this.update = update;
-        this.chat = chat;
+        this.client = client;
+        this.callBackQuery = callBackQuery;
     }
 
     public ReportingBot getBot() {
         return bot;
     }
 
-    public Message getMessage() {
-        return message;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public Chat getChat() {
-        return chat;
-    }
-
     public Update getUpdate() {
         return update;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public boolean isCallBackQuery() {
+        return callBackQuery;
     }
 }

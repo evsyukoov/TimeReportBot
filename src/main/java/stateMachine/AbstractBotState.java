@@ -4,13 +4,10 @@ import bot.BotContext;
 
 public interface AbstractBotState {
 
-    AbstractBotState next = null;
+    // хендлим ответ на вопрос
+    void handleMessage();
 
-    void read(BotContext botContext);
-
-    void write(BotContext botContext);
-
-    AbstractBotState next();
-
+    //задаем новый вопрос
+    void question(String message);
 
 }

@@ -1,12 +1,16 @@
 package stateMachine;
 
-import static stateMachine.State.REGISTER_NAME;
+import bot.BotContext;
+
+import static stateMachine.State.*;
 
 public class BotStateFactory {
 
-    AbstractBotState createBotState(State state) {
+    public static AbstractBotState createBotState(State state, BotContext context) {
         if (state == REGISTER_NAME) {
-            new RegisterNameBotState();
+            return new RegisterName(context);
+        } else if (state == REGISTER_DEPARTMENT) {
+            return new RegisterDepartment(context);
         }
         return null;
     }

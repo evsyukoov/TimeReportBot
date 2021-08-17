@@ -27,15 +27,17 @@ public class ClientDao {
         return result;
     }
 
-    public static void createClient(final long id, final State state) {
+    public static Client createClient(final long id, final State state) {
+        Client client;
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
-            Client client = new Client();
+            client = new Client();
             client.setUid(id);
             client.setState(state.ordinal());
             session.save(client);
             session.getTransaction().commit();
         }
+        return client;
     }
 
     public static void updateState(final long id, final State state) {
@@ -44,6 +46,18 @@ public class ClientDao {
             Client client = new Client();
             client.setUid(id);
             client.setState(state.ordinal());
+            session.update(client);
+            session.getTransaction().commit();
+        }
+    }
+
+    public static void updateName(final long id, final State state, final String name) {
+        try(Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            Client client = new Client();
+            client.setUid(id);
+            client.setState(state.ordinal());
+            client.setName(name);
             session.update(client);
             session.getTransaction().commit();
         }
