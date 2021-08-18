@@ -40,35 +40,60 @@ public class ClientDao {
         return client;
     }
 
-    public static void updateState(final long id, final State state) {
+    public static void updateState(final long id, final int state) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             Client client = new Client();
             client.setUid(id);
-            client.setState(state.ordinal());
+            client.setState(state);
             session.update(client);
             session.getTransaction().commit();
         }
     }
 
-    public static void updateName(final long id, final State state, final String name) {
+    public static void updatePreviousState(final long id, final int prev) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             Client client = new Client();
             client.setUid(id);
-            client.setState(state.ordinal());
+            client.setPreviousState(prev);
+            session.update(client);
+            session.getTransaction().commit();
+        }
+    }
+
+    public static void updateName(final long id, final int current, final int previous, final String name) {
+        try(Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            Client client = new Client();
+            client.setUid(id);
+            client.setState(current);
+            client.setPreviousState(previous);
             client.setName(name);
             session.update(client);
             session.getTransaction().commit();
         }
     }
 
-    public static void updateDescription(final long id, final State state, final String description) {
+    public static void updatePosition(final long id, final int current, final int previous, final String position) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             Client client = new Client();
             client.setUid(id);
-            client.setState(state.ordinal());
+            client.setState(current);
+            client.setPreviousState(previous);
+            client.setPosition(position);
+            session.update(client);
+            session.getTransaction().commit();
+        }
+    }
+
+    public static void updateDescription(final long id, final int state, final String description) {
+        try(Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            Client client = new Client();
+            client.setUid(id);
+            client.setState(state);
             client.setDescription(description);
             session.update(client);
             session.getTransaction().commit();

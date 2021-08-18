@@ -26,6 +26,8 @@ public class NewMessageHandler {
         boolean callBack = update.getMessage() == null;
         Chat chat = callBack ?
                  update.getCallbackQuery().getMessage().getChat() : update.getMessage().getChat();
+        String newMsg = (callBack ? update.getCallbackQuery().getData():
+                update.getMessage().getText());
         long id = chat.getId();
         Client client = ClientDao.getClient(id);
 
@@ -35,7 +37,7 @@ public class NewMessageHandler {
         } else {
             current = State.values()[client.getState()];
         }
-        return BotStateFactory.createBotState(current, new BotContext(bot, update, client, callBack));
+        return BotStateFactory.createBotState(current, new BotContext(bot, update, client, callBack, newMsg));
 
     }
 }

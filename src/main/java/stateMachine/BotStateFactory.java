@@ -11,6 +11,8 @@ public class BotStateFactory {
             return new RegisterName(context);
         } else if (state == REGISTER_DEPARTMENT) {
             return new RegisterDepartment(context);
+        } else if (state == REGISTER_POSITION) {
+            return new RegisterPosition(context);
         }
         return null;
     }

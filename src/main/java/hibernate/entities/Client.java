@@ -27,6 +27,12 @@ public class Client {
     @Column(name = "current_project")
     private String project;
 
+    @Column(name = "previous_state")
+    private int previousState;
+
+    @Column(name = "position")
+    private String position;
+
     public long getUid() {
         return uid;
     }
@@ -65,6 +71,22 @@ public class Client {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public int getPreviousState() {
+        return previousState;
+    }
+
+    public void setPreviousState(int previousState) {
+        this.previousState = previousState;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Client() {

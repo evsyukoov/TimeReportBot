@@ -8,14 +8,17 @@ public class BotContext {
     private final Update update;
     private final Client client;
     private final boolean callBackQuery;
+    private final String message;
 
 
     public BotContext(ReportingBot bot, Update update,
-                      Client client, boolean callBackQuery) {
+                      Client client, boolean callBackQuery,
+                      String message) {
         this.bot = bot;
         this.update = update;
         this.client = client;
         this.callBackQuery = callBackQuery;
+        this.message = message;
     }
 
     public ReportingBot getBot() {
@@ -32,5 +35,9 @@ public class BotContext {
 
     public boolean isCallBackQuery() {
         return callBackQuery;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
