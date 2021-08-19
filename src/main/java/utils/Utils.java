@@ -3,6 +3,10 @@ package utils;
 import exceptions.ValidationException;
 import messages.Message;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
+
 public class Utils {
 
     public static void validateFio(String text) throws ValidationException {
@@ -22,6 +26,18 @@ public class Utils {
 
     public static String generateResultMessage(String error, String message) {
         return String.format("%s\n%s", error, message);
+    }
+
+    public static Properties getProperties(String path) {
+        Properties properties = null;
+        try (InputStream inputStream = new FileInputStream(path);
+             Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+             properties = new Properties();
+             properties.load(reader);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return properties;
     }
 
 }

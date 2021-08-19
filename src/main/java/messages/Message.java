@@ -1,6 +1,22 @@
 package messages;
 
+import utils.Utils;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Message {
+
+    public static final List<String> departments;
+
+    static {
+        departments = Utils.getProperties("./src/main/resources/property/job_departments.properties").
+                values()
+                .stream()
+                .map(String.class::cast)
+                .collect(Collectors.toList());
+    }
 
     public static final String ERROR_SEND_MESSAGE = "Ошибка при отправке сообщения пользователю";
 
@@ -10,7 +26,7 @@ public class Message {
 
     public static final String BACK = "Назад";
 
-    public static final String REGISTER_DEPARTMENT = "Введите отдел";
+    public static final String REGISTER_DEPARTMENT = "Выберите отдел";
 
     public static final String REGISTER_NAME = "Введите свою фамилию имя и отчество через пробел";
 
