@@ -8,7 +8,7 @@ public interface AbstractBotState {
     void handleMessage();
 
     //задаем новый вопрос
-    default void question(String message) {
+    default void question() {
 
     }
 

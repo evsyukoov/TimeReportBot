@@ -11,6 +11,16 @@ public class EnumTranslators {
             return Message.REGISTER_DEPARTMENT;
         } else if (state == State.REGISTER_POSITION.ordinal()) {
             return Message.REGISTER_POSITION;
+        } else if (state == State.REPORT_TYPE.ordinal()) {
+            return Message.CHOOSE_REPORT_TYPE;
+        } else if (state == State.CHOOSE_DAY.ordinal()) {
+            return Message.CHOOSE_DAY;
+        } else if (state == State.SELECT_PROJECT.ordinal()) {
+            return Message.SELECT_PROJECT;
+        } else if (state == State.TYPE_DAY.ordinal()) {
+            return Message.TYPE_DAY;
+        } else if (state == State.FINISH.ordinal()) {
+            return Message.FINISH;
         }
         return "";
     }

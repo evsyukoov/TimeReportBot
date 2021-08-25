@@ -33,7 +33,7 @@ public class NewMessageHandler {
 
         if (client == null) {
             current = State.REGISTER_NAME;
-            client = ClientDao.createClient(id, current);
+            client = ClientDao.createClient(id, current, State.REGISTER_NAME);
         } else {
             current = State.values()[client.getState()];
         }

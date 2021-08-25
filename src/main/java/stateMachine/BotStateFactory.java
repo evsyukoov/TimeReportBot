@@ -13,6 +13,14 @@ public class BotStateFactory {
             return new RegisterDepartment(context);
         } else if (state == REGISTER_POSITION) {
             return new RegisterPosition(context);
+        } else if (state == REPORT_TYPE) {
+            return new ReportType(context);
+        } else if (state == CHOOSE_DAY) {
+            return new ChooseDay(context);
+        } else if (state == SELECT_PROJECT) {
+            return new SelectProject(context);
+        } else if (state == FINISH) {
+            return new Finish(context);
         }
         return null;
     }

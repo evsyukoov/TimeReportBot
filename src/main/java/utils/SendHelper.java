@@ -17,9 +17,8 @@ public class SendHelper {
 
     private static final Logger logger = Logger.getLogger(RegisterName.class.getName());
 
-    public static void sendMessage(SendMessage sendMessage, String text, BotContext context){
+    public static void sendMessage(SendMessage sendMessage, BotContext context){
         sendMessage.setChatId(context.getClient().getUid());
-        sendMessage.setText(text);
         try {
             context.getBot().execute(sendMessage);
         } catch (TelegramApiException e) {
@@ -39,10 +38,12 @@ public class SendHelper {
             row.add(new InlineKeyboardButton().setText(buttons.get(i))
                     .setCallbackData(buttons.get(i)));
         }
-        row = new ArrayList<>();
-        rows.add(row);
-        row.add(new InlineKeyboardButton().setText(message)
-                .setCallbackData(message));
+        if (message != null) {
+            row = new ArrayList<>();
+            rows.add(row);
+            row.add(new InlineKeyboardButton().setText(message)
+                    .setCallbackData(message));
+        }
         inlineKeyboard.setKeyboard(rows);
         sm.setReplyMarkup(inlineKeyboard);
     }

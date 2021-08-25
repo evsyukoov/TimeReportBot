@@ -33,6 +33,20 @@ public class Client {
     @Column(name = "position")
     private String position;
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    @Column(name = "registered")
+    private boolean registered;
+
+    @Column(name = "department")
+    private String department;
+
     public long getUid() {
         return uid;
     }
@@ -92,8 +106,13 @@ public class Client {
     public Client() {
     }
 
+    public boolean isRegistered() {
+        return registered;
+    }
 
-
+    public void setRegistered(boolean registered) {
+        this.registered = registered;
+    }
 
     @Override
     public String toString() {

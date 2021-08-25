@@ -15,6 +15,7 @@ import javax.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProjectsDao {
     final private static SessionFactory factory;
@@ -32,15 +33,17 @@ public class ProjectsDao {
         return result != null && !result.isEmpty();
     }
 
-    public static List<Project> getAllProjectsNames() {
+    public static List<String> getAllProjectsNames() {
         List<Project> projects;
         try (Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             projects = session.createQuery("from Project", Project.class).list();
             session.getTransaction().commit();
         }
-        projects.sort(Comparator.comparing(Project::getProjectName));
-        return projects;
+        return projects.stream()
+                .map(Project::getProjectName)
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public static void addProject(String proj) throws Exception {

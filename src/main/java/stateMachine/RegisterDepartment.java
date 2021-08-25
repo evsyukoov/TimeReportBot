@@ -27,24 +27,27 @@ public class RegisterDepartment implements AbstractBotState{
     public void handleMessage() {
         MainCommandsHandler handler = new MainCommandsHandler(context, State.REGISTER_NAME);
         if (handler.handle()) {
-            question(handler.getResultToClient());
+            sm.setText(handler.getResultToClient());
+            question();
         } else {
             try {
                 Utils.validateFio(context.getMessage());
             } catch (ValidationException e) {
                 String msg = Utils.generateResultMessage(e.getMessage(), Message.REGISTER_NAME);
-                question(msg);
+                sm.setText(msg);
+                question();
                 return;
             }
-            ClientDao.updateName(context.getClient().getUid(), State.REGISTER_POSITION.ordinal(),
+            ClientDao.updateName(context.getClient(), State.REGISTER_POSITION.ordinal(),
                     State.REGISTER_NAME.ordinal(), context.getMessage());
-            SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK);
-            question(Message.REGISTER_DEPARTMENT);
+            SendHelper.setInlineKeyboard(sm, Message.departments, Message.BACK);
+            sm.setText(Message.REGISTER_DEPARTMENT);
+            question();
         }
     }
 
     @Override
-    public void question(String quest) {
-        SendHelper.sendMessage(sm, quest, context);
+    public void question() {
+        SendHelper.sendMessage(sm, context);
     }
 }

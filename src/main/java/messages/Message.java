@@ -10,12 +10,12 @@ public class Message {
 
     public static final List<String> departments;
 
+    public static final List<String> days;
+
     static {
-        departments = Utils.getProperties("./src/main/resources/property/job_departments.properties").
-                values()
-                .stream()
-                .map(String.class::cast)
-                .collect(Collectors.toList());
+        departments = Utils.getMessagesFromProps("./src/main/resources/property/job_departments.properties");
+
+        days = Utils.getMessagesFromProps("./src/main/resources/property/days_choice.properties");
     }
 
     public static final String ERROR_SEND_MESSAGE = "Ошибка при отправке сообщения пользователю";
@@ -24,7 +24,7 @@ public class Message {
 
     public static final String START = "/start";
 
-    public static final String BACK = "Назад";
+    public static final String BACK = " ⬆️️ Назад";
 
     public static final String REGISTER_DEPARTMENT = "Выберите отдел";
 
@@ -34,8 +34,22 @@ public class Message {
 
     public static final String CHOOSE_DAY = "Выберите день";
 
-    public static final String ERROR_EMPTY_FIO = "Фио не отправлено";
+    public static final String ERROR_EMPTY_FIO = "Некорректное ФИО";
+
+    public static final String ERROR_DEPARTMENT = "Неизвестный отдел";
 
     public static final String ERROR_INCORRECT_FIO = "Нужно ввести фамилию и имя";
+
+    public static final String REGISTER_IS_FINISHED = "Регистрация успешно завершена";
+
+    public static final String CHOOSE_REPORT_TYPE = "Выберите за какой день отчитываться";
+
+    public static final String SELECT_PROJECT = "Выберите проект на котором работали";
+
+    public static final String INFO_ABOUT_JOB = "Напишите краткий отчет о проделанной работе";
+
+    public static final String FINISH = " ✅ Принято!";
+
+    public static final String TYPE_DAY = "Введите день в формате dd.mm.yyyy";
 
 }
