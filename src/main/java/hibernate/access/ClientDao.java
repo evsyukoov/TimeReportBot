@@ -6,6 +6,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import stateMachine.State;
 
+import java.time.LocalDateTime;
+
 public class ClientDao {
 
     final private static SessionFactory factory;
@@ -27,7 +29,7 @@ public class ClientDao {
         return result;
     }
 
-    public static Client createClient(final long id, final State state, final State prev) {
+    public static Client createClient(final long id, final State state) {
         Client client;
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
@@ -49,43 +51,42 @@ public class ClientDao {
         }
     }
 
-    public static void updateStates(Client client, final int state, final int prev) {
+    public static void updateDate(Client client,  final int state, LocalDateTime dateTime) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             client.setState(state);
-            client.setPreviousState(prev);
+            client.setDateTime(dateTime);
             session.update(client);
             session.getTransaction().commit();
         }
     }
 
-    public static void updatePreviousState(Client client, final int prev) {
+    public static void updateStates(Client client, final int state) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
-            client.setPreviousState(prev);
+            client.setState(state);
+            client.setDateTime(null);
             session.update(client);
             session.getTransaction().commit();
         }
     }
 
     public static void updateName(Client client,
-                                  final int current, final int previous, final String name) {
+                                  final int current, final String name) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             client.setState(current);
-            client.setPreviousState(previous);
             client.setName(name);
             session.update(client);
             session.getTransaction().commit();
         }
     }
 
-    public static void updatePosition(Client client, final int current, final int previous,
+    public static void updatePosition(Client client, final int current,
                                       final String position, boolean isRegistered) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             client.setState(current);
-            client.setPreviousState(previous);
             client.setPosition(position);
             client.setRegistered(isRegistered);
             session.update(client);
@@ -93,23 +94,32 @@ public class ClientDao {
         }
     }
 
-    public static void updateDepartment(Client client, final int current, final int previous,
+    public static void updateDepartment(Client client, final int current,
                                       final String department) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             client.setState(current);
-            client.setPreviousState(previous);
             client.setDepartment(department);
             session.update(client);
             session.getTransaction().commit();
         }
     }
 
-    public static void updateDescription(Client client, final int state, final int prev,  final String description) {
+    public static void clearClient(Client client) {
+        try(Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            client.setDescription(null);
+            client.setProject(null);
+            client.setDateTime(null);
+            session.update(client);
+            session.getTransaction().commit();
+        }
+    }
+
+    public static void updateDescription(Client client, final int state,  final String description) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             client.setState(state);
-            client.setPreviousState(prev);
             client.setDescription(description);
             session.update(client);
             session.getTransaction().commit();
@@ -117,12 +127,14 @@ public class ClientDao {
     }
 
     public static void updateProject(Client client,
-                                     final int state, final int prev, final String project) {
+                                     final int state,
+                                     final String project,
+                                     LocalDateTime date) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             client.setState(state);
-            client.setPreviousState(prev);
             client.setProject(project);
+            client.setDateTime(date);
             session.update(client);
             session.getTransaction().commit();
         }

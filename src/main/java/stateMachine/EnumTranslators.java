@@ -17,8 +17,8 @@ public class EnumTranslators {
             return Message.CHOOSE_DAY;
         } else if (state == State.SELECT_PROJECT.ordinal()) {
             return Message.SELECT_PROJECT;
-        } else if (state == State.TYPE_DAY.ordinal()) {
-            return Message.TYPE_DAY;
+        }else if (state == State.PARSE_DATE.ordinal()) {
+            return Message.SELECT_DATE;
         } else if (state == State.FINISH.ordinal()) {
             return Message.FINISH;
         }

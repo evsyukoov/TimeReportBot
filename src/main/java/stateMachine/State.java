@@ -6,7 +6,7 @@ public enum State {
     REGISTER_POSITION,
     REPORT_TYPE,
     CHOOSE_DAY,
-    TYPE_DAY,
+    PARSE_DATE,
     SELECT_PROJECT,
     FINISH
 }

@@ -20,16 +20,16 @@ public class RegisterDepartment implements AbstractBotState{
 
     public RegisterDepartment(BotContext context) {
         this.context = context;
-        sm = new SendMessage();
     }
 
     @Override
     public void handleMessage() {
-        MainCommandsHandler handler = new MainCommandsHandler(context, State.REGISTER_NAME);
-        if (handler.handle()) {
-            sm.setText(handler.getResultToClient());
-            question();
+        MainCommandsHandler handler = new MainCommandsHandler(context,
+                null, null);
+        if (context.isCallBackQuery() || handler.handleBackButton() != null) {
+            return;
         } else {
+            sm = new SendMessage();
             try {
                 Utils.validateFio(context.getMessage());
             } catch (ValidationException e) {
@@ -38,8 +38,7 @@ public class RegisterDepartment implements AbstractBotState{
                 question();
                 return;
             }
-            ClientDao.updateName(context.getClient(), State.REGISTER_POSITION.ordinal(),
-                    State.REGISTER_NAME.ordinal(), context.getMessage());
+            ClientDao.updateName(context.getClient(), State.REGISTER_POSITION.ordinal(), context.getMessage());
             SendHelper.setInlineKeyboard(sm, Message.departments, Message.BACK);
             sm.setText(Message.REGISTER_DEPARTMENT);
             question();

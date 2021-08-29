@@ -18,16 +18,16 @@ public class RegisterPosition implements AbstractBotState{
 
     public RegisterPosition(BotContext context) {
         this.context = context;
-        sm = new SendMessage();
     }
 
     @Override
     public void handleMessage() {
-        MainCommandsHandler handler = new MainCommandsHandler(context, State.REGISTER_NAME);
-        if (handler.handle()) {
-            sm.setText(handler.getResultToClient());
+        MainCommandsHandler handler = new MainCommandsHandler(context,
+                State.REGISTER_DEPARTMENT, Message.REGISTER_NAME);
+        if ((sm = handler.handleBackButton()) != null) {
             question();
         } else {
+            sm = new SendMessage();
             try {
                 Utils.validateDepartment(context.getMessage());
             } catch (ValidationException e) {
@@ -38,7 +38,6 @@ public class RegisterPosition implements AbstractBotState{
                 return;
             }
             ClientDao.updateDepartment(context.getClient(), State.REPORT_TYPE.ordinal(),
-                    State.REGISTER_DEPARTMENT.ordinal(),
                     context.getMessage());
             sm.setText(Message.REGISTER_POSITION);
             SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK);

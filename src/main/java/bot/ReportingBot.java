@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import stateMachine.AbstractBotState;
+import utils.SendHelper;
 
 import java.io.FileInputStream;
 import java.util.logging.LogManager;
@@ -25,6 +26,10 @@ public class ReportingBot extends TelegramLongPollingBot {
         if (update != null && (update.getMessage() != null || update.getInlineQuery() != null)) {
             NewMessageHandler handler = new NewMessageHandler(update, this);
             AbstractBotState botState = handler.getBotState();
+            if (botState == null) {
+                SendHelper.sendMessage(handler.getSendMessage(), handler.getContext());
+                return;
+            }
             botState.handleMessage();
         }
     }

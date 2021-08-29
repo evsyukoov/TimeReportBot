@@ -18,18 +18,15 @@ public class ReportDaysDao {
                 .buildSessionFactory();
     }
 
-    public static void createReportDay(long id) throws Exception {
-        Client client = ClientDao.getClient(id);
-        if (client == null) {
-            throw new UnknownDataBaseException("Неизвестная ошибка. Обратитесь в техподдержку");
-        }
+    public static void createReportDay(Client client) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             ReportDay reportDay = new ReportDay();
             reportDay.setDescription(client.getDescription());
+            reportDay.setName(client.getName());
             reportDay.setProject(client.getProject());
             // время ставим по МСК
-            reportDay.setDateTime(LocalDateTime.now().plusHours(3));
+            reportDay.setDateTime(client.getDateTime().plusHours(3));
             session.saveOrUpdate(reportDay);
             session.getTransaction().commit();
         }

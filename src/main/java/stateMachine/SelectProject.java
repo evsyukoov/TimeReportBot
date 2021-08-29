@@ -4,10 +4,12 @@ import bot.BotContext;
 import handlers.MainCommandsHandler;
 import hibernate.access.ClientDao;
 import hibernate.access.ProjectsDao;
+import hibernate.entities.Client;
 import messages.Message;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import utils.SendHelper;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 public class SelectProject implements AbstractBotState {
@@ -17,24 +19,30 @@ public class SelectProject implements AbstractBotState {
     BotContext context;
 
     public SelectProject(BotContext context) {
-        this.sm = new SendMessage();
         this.context = context;
     }
 
     @Override
     public void handleMessage() {
-        MainCommandsHandler handler = new MainCommandsHandler(context, State.REPORT_TYPE);
-        if (handler.handle()) {
-            sm.setText(handler.getResultToClient());
-            if (handler.getResultToClient().equals(Message.CHOOSE_REPORT_TYPE)) {
-                SendHelper.setInlineKeyboard(sm, Message.days, null);
-            }
+        Client client = context.getClient();
+        MainCommandsHandler handler;
+        // приходим на этот стейт с разных мест, по наличию даты понимаем откуда пришли
+        if (client.getDateTime() == null) {
+            handler = new MainCommandsHandler(context,
+                    State.CHOOSE_DAY, Message.CHOOSE_REPORT_TYPE);
+        } else {
+            handler = new MainCommandsHandler(context,
+                    State.PARSE_DATE, Message.SELECT_DATE);
+        }
+        if ((sm = handler.handleBackButton()) != null) {
             question();
         } else {
+            sm = new SendMessage();
             String command = context.getMessage();
             if (ProjectsDao.getAllProjectsNames().contains(command)) {
                 ClientDao.updateProject(context.getClient(),
-                        State.FINISH.ordinal(), State.CHOOSE_DAY.ordinal(), command);
+                        State.FINISH.ordinal(), command, context.getClient().getDateTime() == null ?
+                        LocalDateTime.now() : context.getClient().getDateTime());
                 sm.setText(Message.INFO_ABOUT_JOB);
                 SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK);
                 question();

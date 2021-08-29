@@ -4,6 +4,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import stateMachine.State;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clients")
@@ -27,11 +28,19 @@ public class Client {
     @Column(name = "current_project")
     private String project;
 
-    @Column(name = "previous_state")
-    private int previousState;
-
     @Column(name = "position")
     private String position;
+
+    @Column(name = "report_date")
+    private LocalDateTime dateTime;
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
 
     public String getDepartment() {
         return department;
@@ -85,14 +94,6 @@ public class Client {
 
     public void setProject(String project) {
         this.project = project;
-    }
-
-    public int getPreviousState() {
-        return previousState;
-    }
-
-    public void setPreviousState(int previousState) {
-        this.previousState = previousState;
     }
 
     public String getPosition() {

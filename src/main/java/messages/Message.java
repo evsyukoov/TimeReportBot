@@ -40,6 +40,8 @@ public class Message {
 
     public static final String ERROR_INCORRECT_FIO = "Нужно ввести фамилию и имя";
 
+    public static final String ERROR_DATE_FORMAT = "Некорректный формат даты";
+
     public static final String REGISTER_IS_FINISHED = "Регистрация успешно завершена";
 
     public static final String CHOOSE_REPORT_TYPE = "Выберите за какой день отчитываться";
@@ -50,6 +52,6 @@ public class Message {
 
     public static final String FINISH = " ✅ Принято!";
 
-    public static final String TYPE_DAY = "Введите день в формате dd.mm.yyyy";
+    public static final String SELECT_DATE = "Введите день в формате dd.mm.yyyy";
 
 }

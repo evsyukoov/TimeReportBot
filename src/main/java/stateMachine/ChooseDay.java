@@ -19,13 +19,11 @@ public class ChooseDay implements AbstractBotState {
 
     @Override
     public void handleMessage() {
-        //кнопки назад на этом стейте нет, поскольку он первый после регистрации, хендлим только старт/стоп
-        MainCommandsHandler handler = new MainCommandsHandler(context, State.CHOOSE_DAY);
-        if (handler.handleMainCommands()) {
-            sm.setText(handler.getResultToClient());
-            SendHelper.setInlineKeyboard(sm, Message.days, null);
-            question();
-        } else if (handler.handleReportChoice(sm)) {
+        //кнопки назад на этом стейте нет, поскольку он первый после регистрации, хендлим только старт/стоп,
+        // они хендлятся вверху для всей логики
+        MainCommandsHandler handler = new MainCommandsHandler(context,
+                State.REPORT_TYPE, Message.CHOOSE_REPORT_TYPE);
+        if (handler.handleReportChoice(sm)) {
             question();
         }
     }

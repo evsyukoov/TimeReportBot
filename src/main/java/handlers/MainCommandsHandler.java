@@ -8,46 +8,70 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import stateMachine.EnumTranslators;
 import stateMachine.State;
 import utils.SendHelper;
+import utils.Utils;
 
+import javax.swing.text.DateFormatter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class MainCommandsHandler {
     BotContext context;
 
-    // стартовая позиция клиента ожет быть разной в зависимости от того прошел или нет регистрацию
-    State start;
-
     String resultToClient;
 
-    public MainCommandsHandler(BotContext context, State start) {
+    State newState;
+
+    String message;
+
+    public MainCommandsHandler(BotContext context,
+                               State newState, String message) {
         this.context = context;
-        this.start = start;
+        this.newState = newState;
+        this.message = message;
     }
 
-    public boolean handle() {
+    public SendMessage handleBackButton() {
         String command = context.getMessage();
         if (command.equals(Message.BACK)) {
-            ClientDao.updateState(context.getClient(), context.getClient().getPreviousState() + 1);
-            resultToClient = EnumTranslators.translate(context.getClient().getPreviousState());
-            return true;
-        } else if (command.equals(Message.START) || command.equals(Message.STOP)) {
-            ClientDao.updateState(context.getClient(), start.ordinal());
-            resultToClient = EnumTranslators.translate(start.ordinal());
-            return true;
+            SendMessage sm = new SendMessage();
+            ClientDao.updateState(context.getClient(), newState.ordinal());
+            sm.setText(message);
+            if (message.equals(Message.REGISTER_DEPARTMENT)) {
+                SendHelper.setInlineKeyboard(sm, Message.departments, Message.BACK);
+            } else if (message.equals(Message.SELECT_PROJECT)) {
+                SendHelper.setInlineKeyboard(sm, ProjectsDao.getAllProjectsNames(), Message.BACK);
+            } else if (message.equals(Message.CHOOSE_REPORT_TYPE)) {
+                SendHelper.setInlineKeyboard(sm, Message.days, null);
+            } else if (message.equals(Message.SELECT_DATE)) {
+                SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK);
+            }
+            return sm;
         }
-        return false;
+        return null;
     }
 
-    // у некоторых состояний нет кнопки назад
-    public boolean handleMainCommands() {
+    public SendMessage parseDate() {
         String command = context.getMessage();
-        if (command.equals(Message.START) || command.equals(Message.STOP)) {
-            ClientDao.updateState(context.getClient(), start.ordinal());
-            resultToClient = EnumTranslators.translate(start.ordinal());
-            return true;
+        SendMessage sm = new SendMessage();
+        LocalDateTime date;
+        try {
+            date = Utils.parseDate(command);
+        } catch (ParseException e) {
+            sm = new SendMessage();
+            sm.setText(Utils.generateResultMessage(Message.ERROR_DATE_FORMAT, Message.SELECT_DATE));
+            SendHelper.setInlineKeyboard(sm,Collections.emptyList(), Message.BACK);
+            return sm;
         }
-        return false;
+        ClientDao.updateDate(context.getClient(), State.SELECT_PROJECT.ordinal(), date);
+        List<String> projects = ProjectsDao.getAllProjectsNames();
+        sm.setText(Message.SELECT_PROJECT);
+        SendHelper.setInlineKeyboard(sm, projects, Message.BACK);
+        return sm;
     }
 
     public boolean handleReportChoice(SendMessage message) {
@@ -55,20 +79,17 @@ public class MainCommandsHandler {
         if (command.equals(Message.days.get(1))) {
             message.setText(EnumTranslators.translate(State.SELECT_PROJECT.ordinal()));
             List<String> projects = ProjectsDao.getAllProjectsNames();
-            ClientDao.updateStates(context.getClient(), State.SELECT_PROJECT.ordinal(), State.REPORT_TYPE.ordinal());
+            ClientDao.updateStates(context.getClient(), State.SELECT_PROJECT.ordinal());
             SendHelper.setInlineKeyboard(message, projects, Message.BACK);
             return true;
-        } else if (command.equals(Message.days.get(0))) {
-            message.setText(EnumTranslators.translate(State.TYPE_DAY.ordinal()));
-            ClientDao.updateStates(context.getClient(), State.TYPE_DAY.ordinal(), State.REPORT_TYPE.ordinal());
+        }
+        else if (command.equals(Message.days.get(0))) {
+            message.setText(EnumTranslators.translate(State.PARSE_DATE.ordinal()));
+            ClientDao.updateStates(context.getClient(), State.PARSE_DATE.ordinal());
             SendHelper.setInlineKeyboard(message, Collections.emptyList(), Message.BACK);
             return true;
         }
         return false;
     }
 
-
-    public String getResultToClient() {
-        return resultToClient;
-    }
 }

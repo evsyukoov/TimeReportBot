@@ -13,8 +13,8 @@ public class ReportDay {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "uid")
-    private long uid;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "project")
     private String project;
@@ -57,11 +57,11 @@ public class ReportDay {
         this.dateTime = dateTime;
     }
 
-    public long getUid() {
-        return uid;
+    public String getName() {
+        return name;
     }
 
-    public void setUid(long uid) {
-        this.uid = uid;
+    public void setName(String name) {
+        this.name = name;
     }
 }

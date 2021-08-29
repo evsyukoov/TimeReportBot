@@ -5,6 +5,13 @@ import messages.Message;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -56,6 +63,17 @@ public class Utils {
                 .map(s -> "🔳 ".concat(s))
                 .sorted()
                 .collect(Collectors.toList());
+    }
+
+    public static LocalDateTime parseDate(String dateText) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        //  флаг проверяет дату на наличие в календаре
+        dateFormat.setLenient(false);
+        Date date = dateFormat.parse(dateText);
+        return Instant.ofEpochMilli(date.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+                .plusHours(3);
     }
 
 }
