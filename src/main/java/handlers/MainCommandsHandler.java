@@ -1,6 +1,7 @@
 package handlers;
 
 import bot.BotContext;
+import exceptions.DateAfterTodayException;
 import hibernate.access.ClientDao;
 import hibernate.access.ProjectsDao;
 import messages.Message;
@@ -61,8 +62,13 @@ public class MainCommandsHandler {
         LocalDateTime date;
         try {
             date = Utils.parseDate(command);
-        } catch (ParseException e) {
-            sm = new SendMessage();
+
+        } catch (DateAfterTodayException e) {
+            sm.setText(Utils.generateResultMessage(Message.ERROR_DATE_AFTER_TODAY, Message.SELECT_DATE));
+            SendHelper.setInlineKeyboard(sm,Collections.emptyList(), Message.BACK);
+            return sm;
+        }
+        catch (ParseException e) {
             sm.setText(Utils.generateResultMessage(Message.ERROR_DATE_FORMAT, Message.SELECT_DATE));
             SendHelper.setInlineKeyboard(sm,Collections.emptyList(), Message.BACK);
             return sm;

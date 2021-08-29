@@ -1,5 +1,6 @@
 package utils;
 
+import exceptions.DateAfterTodayException;
 import exceptions.ValidationException;
 import messages.Message;
 
@@ -65,11 +66,14 @@ public class Utils {
                 .collect(Collectors.toList());
     }
 
-    public static LocalDateTime parseDate(String dateText) throws ParseException {
+    public static LocalDateTime parseDate(String dateText) throws ParseException, DateAfterTodayException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         //  флаг проверяет дату на наличие в календаре
         dateFormat.setLenient(false);
         Date date = dateFormat.parse(dateText);
+        if (date.after(new Date())) {
+            throw new DateAfterTodayException();
+        }
         return Instant.ofEpochMilli(date.getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime()

@@ -1,13 +1,10 @@
 package hibernate.access;
 
-import exceptions.UnknownDataBaseException;
 import hibernate.entities.Client;
 import hibernate.entities.ReportDay;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-
-import java.time.LocalDateTime;
 
 public class ReportDaysDao {
     final private static SessionFactory factory;
