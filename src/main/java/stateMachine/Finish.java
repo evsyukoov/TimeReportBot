@@ -33,7 +33,7 @@ public class Finish implements AbstractBotState {
             sm.setText(Utils.generateResultMessage(Message.FINISH, Message.CHOOSE_REPORT_TYPE));
             SendHelper.setInlineKeyboard(sm, Message.days, null);
             ClientDao.updateDescription(context.getClient(), State.CHOOSE_DAY.ordinal(), context.getMessage());
-            ReportDaysDao.createReportDay(context.getClient());
+            ReportDaysDao.saveOrUpdate(context.getClient());
             ClientDao.clearClient(context.getClient());
             question();
         }

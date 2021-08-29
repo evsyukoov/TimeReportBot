@@ -23,7 +23,7 @@ public class ReportingBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update != null && (update.getMessage() != null || update.getInlineQuery() != null)) {
+        if (update != null && (update.getMessage() != null || update.getCallbackQuery() != null)) {
             NewMessageHandler handler = new NewMessageHandler(update, this);
             AbstractBotState botState = handler.getBotState();
             if (botState == null) {

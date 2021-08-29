@@ -2,7 +2,8 @@ package hibernate.entities;
 
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "report_days")
@@ -23,15 +24,10 @@ public class ReportDay {
     private String description;
 
     @Column(name = "date")
-    private LocalDateTime dateTime;
+    private Date date;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    @Column(name = "uid")
+    private long uid;
 
     public String getProject() {
         return project;
@@ -49,12 +45,12 @@ public class ReportDay {
         this.description = description;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getName() {
@@ -63,5 +59,13 @@ public class ReportDay {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
     }
 }

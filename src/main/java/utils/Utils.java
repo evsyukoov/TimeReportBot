@@ -80,4 +80,8 @@ public class Utils {
                 .plusHours(3);
     }
 
+    public static java.sql.Date convertDate(LocalDateTime dateTime) {
+        return java.sql.Date.valueOf(dateTime.toLocalDate());
+    }
+
 }

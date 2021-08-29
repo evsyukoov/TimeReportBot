@@ -44,7 +44,7 @@ public class Message {
 
     public static final String ERROR_DATE_AFTER_TODAY = "Слишком рано отчитываться за эту дату";
 
-    public static final String REGISTER_IS_FINISHED = "Регистрация успешно завершена";
+    public static final String REGISTER_IS_FINISHED = " ✅ Регистрация успешно завершена";
 
     public static final String CHOOSE_REPORT_TYPE = "Выберите за какой день отчитываться";
 
