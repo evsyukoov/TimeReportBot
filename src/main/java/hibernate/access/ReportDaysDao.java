@@ -66,11 +66,4 @@ public class ReportDaysDao {
             session.getTransaction().commit();
         }
     }
-
-    public static void main(String[] args) {
-        Client cl = new Client();
-        cl.setDateTime(LocalDateTime.now());
-        cl.setUid(349939502);
-        saveOrUpdate(cl);
-    }
 }

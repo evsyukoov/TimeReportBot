@@ -56,4 +56,6 @@ public class Message {
 
     public static final String SELECT_DATE = "Введите день в формате dd.mm.yyyy";
 
+    public static final String NOTIFICATION = "Не забудьте отчитаться за сегодняшний день";
+
 }

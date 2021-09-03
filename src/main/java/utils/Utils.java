@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -33,6 +34,10 @@ public class Utils {
         if (fio.length < 2) {
             throw new ValidationException(Message.ERROR_INCORRECT_FIO);
         }
+    }
+
+    public static <T> boolean isEmpty(Collection<T> coll) {
+        return coll == null || coll.isEmpty();
     }
 
     public static boolean isBlank(String[] arr) {
