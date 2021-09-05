@@ -77,29 +77,7 @@ public class ClientDao {
             session.beginTransaction();
             client.setState(current);
             client.setName(name);
-            session.update(client);
-            session.getTransaction().commit();
-        }
-    }
-
-    public static void updatePosition(Client client, final int current,
-                                      final String position, boolean isRegistered) {
-        try(Session session = factory.getCurrentSession()) {
-            session.beginTransaction();
-            client.setState(current);
-            client.setPosition(position);
-            client.setRegistered(isRegistered);
-            session.update(client);
-            session.getTransaction().commit();
-        }
-    }
-
-    public static void updateDepartment(Client client, final int current,
-                                      final String department) {
-        try(Session session = factory.getCurrentSession()) {
-            session.beginTransaction();
-            client.setState(current);
-            client.setDepartment(department);
+            client.setRegistered(true);
             session.update(client);
             session.getTransaction().commit();
         }

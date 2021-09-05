@@ -7,11 +7,9 @@ public class EnumTranslators {
     public static String translate(int state) {
         if (state == State.REGISTER_NAME.ordinal()) {
             return Message.REGISTER_NAME;
-        } else if (state == State.REGISTER_DEPARTMENT.ordinal()) {
-            return Message.REGISTER_DEPARTMENT;
-        } else if (state == State.REGISTER_POSITION.ordinal()) {
-            return Message.REGISTER_POSITION;
-        } else if (state == State.REPORT_TYPE.ordinal()) {
+        } else if (state == State.MENU.ordinal()) {
+            return null;
+        } else if (state == State.MENU_CHOICE.ordinal()) {
             return Message.CHOOSE_REPORT_TYPE;
         } else if (state == State.CHOOSE_DAY.ordinal()) {
             return Message.CHOOSE_DAY;

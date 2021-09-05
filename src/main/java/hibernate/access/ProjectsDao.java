@@ -46,16 +46,28 @@ public class ProjectsDao {
                 .collect(Collectors.toList());
     }
 
-    public static void addProject(String proj) throws Exception {
+    public static List<Project> getProjects() {
+        List<Project> projects;
         try (Session session = factory.getCurrentSession()) {
             session.beginTransaction();
-            if (isTableContainsProject(session, proj)) {
-                throw new AlreadyContainsProjectException("Такой проект уже есть в системе");
-            }
-            Project project = new Project();
-            project.setProjectName(proj);
-            session.save(project);
+            projects = session.createQuery("from Project", Project.class).list();
             session.getTransaction().commit();
         }
+        return projects;
+    }
+
+    public static String getProjectById(String id) {
+        String project;
+        try (Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            project = session.createQuery("SELECT projectName from Project WHERE id=:id", String.class)
+                                        .setParameter("id", Long.parseLong(id))
+                                        .list()
+                                        .stream()
+                                        .findFirst()
+                                        .orElse(null);
+            session.getTransaction().commit();
+        }
+        return project;
     }
 }

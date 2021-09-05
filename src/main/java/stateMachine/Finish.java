@@ -4,9 +4,9 @@ import bot.BotContext;
 import com.google.inject.internal.cglib.core.$ClassInfo;
 import handlers.MainCommandsHandler;
 import hibernate.access.ClientDao;
-import hibernate.access.ProjectsDao;
+import hibernate.access.NotificationDao;
 import hibernate.access.ReportDaysDao;
-import hibernate.entities.ReportDay;
+import hibernate.entities.Client;
 import messages.Message;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import utils.SendHelper;
@@ -30,10 +30,11 @@ public class Finish implements AbstractBotState {
             question();
         } else {
             sm = new SendMessage();
-            sm.setText(Utils.generateResultMessage(Message.FINISH, Message.CHOOSE_REPORT_TYPE));
-            SendHelper.setInlineKeyboard(sm, Message.days, null);
-            ClientDao.updateDescription(context.getClient(), State.CHOOSE_DAY.ordinal(), context.getMessage());
+            sm.setText(Utils.generateResultMessage(Message.FINISH, Message.MENU));
+            SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null);
+            ClientDao.updateDescription(context.getClient(), State.MENU_CHOICE.ordinal(), context.getMessage());
             ReportDaysDao.saveOrUpdate(context.getClient());
+            NotificationDao.updateFireTime(context.getClient().getUid());
             ClientDao.clearClient(context.getClient());
             question();
         }

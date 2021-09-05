@@ -1,6 +1,8 @@
 package bot;
 
 import handlers.NewMessageHandler;
+import hibernate.access.NotificationDao;
+import notifications.MessageNotificator;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -18,6 +20,12 @@ public class ReportingBot extends TelegramLongPollingBot {
     final String token = "";
 
     private final String botName = "";
+
+    public ReportingBot() {
+        MessageNotificator notificator = new MessageNotificator(this);
+        notificator.notificate();
+        notificator.updateMessage();
+    }
 
     private static final Logger logger = Logger.getLogger(ReportingBot.class.getName());
 
@@ -45,7 +53,8 @@ public class ReportingBot extends TelegramLongPollingBot {
     }
 
     public static void main(String[] args) throws Exception {
-        LogManager.getLogManager().readConfiguration(new FileInputStream("./src/main/resources/logging.properties"));
+        LogManager.getLogManager().readConfiguration
+                (new FileInputStream("./src/main/resources/logging.properties"));
         TelegramBotsApi botsApi = new TelegramBotsApi();
         ApiContextInitializer.init();
         try {

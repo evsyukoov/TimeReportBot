@@ -28,11 +28,11 @@ public class Client {
     @Column(name = "current_project")
     private String project;
 
-    @Column(name = "position")
-    private String position;
-
     @Column(name = "report_date")
     private LocalDateTime dateTime;
+
+    @Column(name = "registered")
+    private boolean registered;
 
     public LocalDateTime getDateTime() {
         return dateTime;
@@ -41,20 +41,6 @@ public class Client {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    @Column(name = "registered")
-    private boolean registered;
-
-    @Column(name = "department")
-    private String department;
 
     public long getUid() {
         return uid;
@@ -94,14 +80,6 @@ public class Client {
 
     public void setProject(String project) {
         this.project = project;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
     }
 
     public Client() {

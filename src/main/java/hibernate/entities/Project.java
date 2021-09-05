@@ -3,7 +3,7 @@ package hibernate.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "projects")
+@Table(name = "projects_dictionary")
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

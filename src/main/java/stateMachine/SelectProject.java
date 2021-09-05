@@ -39,10 +39,12 @@ public class SelectProject implements AbstractBotState {
         } else {
             sm = new SendMessage();
             String command = context.getMessage();
-            if (ProjectsDao.getAllProjectsNames().contains(command)) {
+            String project = ProjectsDao.getProjectById(command);
+            if (project != null) {
                 ClientDao.updateProject(context.getClient(),
                         State.FINISH.ordinal(), command, context.getClient().getDateTime() == null ?
                         LocalDateTime.now() : context.getClient().getDateTime());
+                SendHelper.refreshInlineKeyboard(context);
                 sm.setText(Message.INFO_ABOUT_JOB);
                 SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK);
                 question();

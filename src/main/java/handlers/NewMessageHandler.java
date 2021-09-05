@@ -3,6 +3,7 @@ package handlers;
 import bot.BotContext;
 import bot.ReportingBot;
 import hibernate.access.ClientDao;
+import hibernate.access.EmployeeDao;
 import hibernate.entities.Client;
 import messages.Message;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,6 +13,7 @@ import stateMachine.AbstractBotState;
 import stateMachine.BotStateFactory;
 import stateMachine.State;
 import utils.SendHelper;
+import utils.Utils;
 
 public class NewMessageHandler {
 
@@ -67,11 +69,12 @@ public class NewMessageHandler {
             sm = new SendMessage();
             Client client = context.getClient();
             if (client.isRegistered()) {
-                ClientDao.updateState(client, State.CHOOSE_DAY.ordinal());
-                sm.setText(Message.CHOOSE_REPORT_TYPE);
-                SendHelper.setInlineKeyboard(sm, Message.days, null);
+                ClientDao.updateState(client, State.MENU_CHOICE.ordinal());
+                SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null);
+                sm.setText(Message.MENU);
             } else {
-                ClientDao.updateState(client, State.REGISTER_DEPARTMENT.ordinal());
+                ClientDao.updateState(client, State.MENU.ordinal());
+                SendHelper.setInlineKeyboardOneColumn(sm, EmployeeDao.getEmployeeNames(), null);
                 sm.setText(Message.REGISTER_NAME);
             }
         }

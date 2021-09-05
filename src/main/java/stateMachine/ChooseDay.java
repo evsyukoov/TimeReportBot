@@ -19,13 +19,12 @@ public class ChooseDay implements AbstractBotState {
 
     @Override
     public void handleMessage() {
-        //кнопки назад на этом стейте нет, поскольку он первый после регистрации, хендлим только старт/стоп,
-        // они хендлятся вверху для всей логики
+
         MainCommandsHandler handler = new MainCommandsHandler(context,
-                State.REPORT_TYPE, Message.CHOOSE_REPORT_TYPE);
-        if (handler.handleReportChoice(sm)) {
+                State.MENU_CHOICE, Message.MENU);
+        if ((sm = handler.handleBackButton()) != null
+        || (sm = handler.handleReportChoice()) != null)
             question();
-        }
     }
 
     @Override

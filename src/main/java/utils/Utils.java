@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Utils {
 
@@ -68,6 +69,23 @@ public class Utils {
                 .map(String.class::cast)
                 .map(s -> "🔳 ".concat(s))
                 .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public static List<Long> getUidsFromProps(String path) {
+        Properties props = Utils.getProperties(path);
+        return  props
+                .values()
+                .stream()
+                .map(String.class::cast)
+                .map(Long::parseLong)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public static List<String> modifyDictionaryData(List<String> data) {
+        return data.stream()
+                .map(item -> Message.EMPTY_SYMBOL.concat(item))
                 .collect(Collectors.toList());
     }
 

@@ -10,8 +10,6 @@ import utils.Utils;
 
 import javax.persistence.Query;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 public class ReportDaysDao {
@@ -21,6 +19,18 @@ public class ReportDaysDao {
         factory = new Configuration()
                 .configure("hibernate_work.cfg.xml")
                 .buildSessionFactory();
+    }
+
+    public static boolean isReportToday(Client client) {
+        boolean result;
+        try(Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            Query query = session.createQuery("from ReportDay WHERE date = :date", ReportDay.class);
+            java.sql.Date now = Utils.convertDate(LocalDateTime.now());
+            query.setParameter("date", now);
+            result = !Utils.isEmpty(query.getResultList());
+        }
+        return result;
     }
 
     public static void saveOrUpdate(Client client) {

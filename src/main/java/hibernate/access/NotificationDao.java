@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import stateMachine.State;
+import utils.Utils;
 
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
@@ -24,21 +25,46 @@ public class NotificationDao {
                 .buildSessionFactory();
     }
 
-        public static void saveClientOption(LocalDateTime dateTime, long uid){
-            try(Session session = factory.getCurrentSession()) {
-                session.beginTransaction();
-                Notification notification = new Notification();
-                notification.setUid(uid);
-                notification.setNextFireTime(dateTime);
-                session.saveOrUpdate(notification);
-                session.getTransaction().commit();
-            }
+    public static void saveClientOption(LocalDateTime dateTime, long uid) {
+        try (Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            Notification notification = new Notification();
+            notification.setUid(uid);
+            notification.setNextFireTime(dateTime);
+            session.saveOrUpdate(notification);
+            session.getTransaction().commit();
         }
+    }
+
+    public static void updateFireTime(long uid) {
+        LocalDateTime nextFireTime = getNextFireTime(uid);
+        if (nextFireTime == null || nextFireTime.getDayOfMonth() > LocalDateTime.now().getDayOfMonth()) {
+            return;
+        }
+        saveClientOption(nextFireTime.plusHours(24), uid);
+    }
+
+
+    private static LocalDateTime getNextFireTime(long uid) {
+        LocalDateTime nextFireTime;
+        try (Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            Query<LocalDateTime> query = session.createQuery("SELECT nextFireTime FROM Notification" +
+                    " WHERE uid = :uid", LocalDateTime.class);
+            query.setParameter("uid", uid);
+            if (Utils.isEmpty(query.getResultList())) {
+                return null;
+            }
+            nextFireTime = query.getResultList().get(0);
+            session.getTransaction().commit();
+        }
+        return nextFireTime;
+    }
 
     // получаем клиентов, которым пора получить сообщение
     public static List<Long> getClientUids(LocalDateTime time) {
         List<Long> result;
-        try(Session session = factory.getCurrentSession()) {
+        try (Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             Query<Notification> query = session.createQuery("FROM Notification " +
                     "WHERE nextFireTime <= :time", Notification.class);

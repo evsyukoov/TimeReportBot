@@ -2,9 +2,10 @@ package stateMachine;
 
 public enum State {
     REGISTER_NAME,
-    REGISTER_DEPARTMENT,
-    REGISTER_POSITION,
+    MENU,
+    MENU_CHOICE,
     REPORT_TYPE,
+    NOTIFICATION_CHOICE,
     CHOOSE_DAY,
     PARSE_DATE,
     SELECT_PROJECT,

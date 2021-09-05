@@ -5,10 +5,12 @@ import hibernate.access.NotificationDao;
 import messages.Message;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import utils.Utils;
 
 import java.time.LocalDateTime;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.List;
 
 public class MessageNotificator {
 
@@ -39,5 +41,19 @@ public class MessageNotificator {
                 }
             }
         }, 0, PERIOD);
+    }
+
+    public void updateMessage() {
+        List<Long> uids = Utils.getUidsFromProps("./src/main/resources/property/update.properties");
+        for (long uid : uids) {
+            SendMessage sm = new SendMessage();
+            sm.setChatId(uid);
+            sm.setText("Обновление 05.09.2021. Добавлены справочники, оповещения. Для старта введите /start");
+            try {
+                bot.execute(sm);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

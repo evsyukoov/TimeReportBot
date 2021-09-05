@@ -19,20 +19,13 @@ public class ReportType implements AbstractBotState{
 
     @Override
     public void handleMessage() {
-        // после успешной регистрации старт всегда начинается отсюда
         MainCommandsHandler handler = new MainCommandsHandler(context,
-                State.REGISTER_POSITION, Message.REGISTER_DEPARTMENT);
+                State.REGISTER_NAME, Message.REGISTER_DEPARTMENT);
         if ((sm = handler.handleBackButton()) != null) {
             question();
         } else {
             sm = new SendMessage();
-            if (!context.getClient().isRegistered()) {
-                sm.setText(Utils.generateResultMessage(Message.REGISTER_IS_FINISHED, Message.CHOOSE_REPORT_TYPE));
-                ClientDao.updatePosition(context.getClient(), State.CHOOSE_DAY.ordinal(),
-                         context.getMessage(), true);
-            } else {
-                sm.setText(Message.CHOOSE_REPORT_TYPE);
-            }
+            sm.setText(Message.CHOOSE_REPORT_TYPE);
             SendHelper.setInlineKeyboard(sm, Message.days, null);
             question();
         }

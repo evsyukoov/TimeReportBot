@@ -12,11 +12,31 @@ public class Message {
 
     public static final List<String> days;
 
+    public static final List<String> actionsMenu;
+
     static {
         departments = Utils.getMessagesFromProps("./src/main/resources/property/job_departments.properties");
 
         days = Utils.getMessagesFromProps("./src/main/resources/property/days_choice.properties");
+
+        actionsMenu = Utils.getMessagesFromProps("./src/main/resources/property/menu_actions.properties");
     }
+
+    public static final String EMPTY_SYMBOL = "🔳 ";
+
+    public static final String CONFIRM_SYMBOL = "✅ ";
+
+    public static final String MENU = "Выберите действие";
+
+    public static final String DISCHARGE_ACTION_ENABLED  = "Я больше не буду беспокоить тебя своими оповещениями";
+
+    public static final String APPROVE_NOTIFICATION_ENABLED = "Теперь, если ты забыл отчитаться до %s, тебе придет оповещение";
+
+    public static final String DISCHARGE_NOTIFICATION = "Отменить оповещения";
+
+    public static final String APPROVE_NOTIFICATION = "Установить оповещения";
+
+    public static final String NOTIFICATION_CHOICE = "Выберите время оповещений по МСК";
 
     public static final String ERROR_SEND_MESSAGE = "Ошибка при отправке сообщения пользователю";
 
@@ -28,7 +48,7 @@ public class Message {
 
     public static final String REGISTER_DEPARTMENT = "Выберите отдел";
 
-    public static final String REGISTER_NAME = "Введите свою фамилию имя и отчество через пробел";
+    public static final String REGISTER_NAME = "Выберите свое имя";
 
     public static final String REGISTER_POSITION = "Введите свою должность";
 
