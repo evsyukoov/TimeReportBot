@@ -23,13 +23,13 @@ DROP TABLE IF EXISTS `clients`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `clients` (
-  `uid` int(20) NOT NULL,
+  `uid` int(11) NOT NULL,
   `name` longtext,
-  `state` int(11) DEFAULT NULL,
-  `current_description` longtext,
-  `current_project` longtext,
+  `state` int(4) DEFAULT NULL,
+  `current_project` varchar(45) DEFAULT NULL,
   `registered` tinyint(4) DEFAULT NULL,
-  `report_date` varchar(45) DEFAULT NULL,
+  `report_date` datetime DEFAULT NULL,
+  `extra_projects` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -40,7 +40,7 @@ CREATE TABLE `clients` (
 
 LOCK TABLES `clients` WRITE;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
-INSERT INTO `clients` VALUES (349939502,'Тестовый Для Проверки',2,NULL,NULL,1,NULL);
+INSERT INTO `clients` VALUES (349939502,'Тестовый Для Проверки',2,NULL,1,NULL,NULL);
 /*!40000 ALTER TABLE `clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,12 +128,13 @@ DROP TABLE IF EXISTS `report_days`;
 CREATE TABLE `report_days` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` date NOT NULL,
-  `name` longtext,
+  `name` varchar(45) DEFAULT NULL,
   `project` varchar(45) DEFAULT NULL,
   `description` longtext,
   `uid` int(20) DEFAULT NULL,
+  `extra_projects` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -142,7 +143,7 @@ CREATE TABLE `report_days` (
 
 LOCK TABLES `report_days` WRITE;
 /*!40000 ALTER TABLE `report_days` DISABLE KEYS */;
-INSERT INTO `report_days` VALUES (30,'2021-09-05','Тестовый Для Проверки','25','Все сделано',349939502);
+INSERT INTO `report_days` VALUES (30,'2021-09-05','Тестовый Для Проверки','25','Все сделано',349939502,NULL),(31,'2021-09-08','Тестовый Для Проверки','87','jvhjvb',349939502,NULL),(32,'2021-09-11','Тестовый Для Проверки','87','ghdt',349939502,'/86/'),(33,'2000-01-01','Тестовый Для Проверки','87','wegwrgwg',349939502,'/82/83/84/'),(34,'2020-02-02','Тестовый Для Проверки','87','3rg3rg3rg3',349939502,'/83/');
 /*!40000 ALTER TABLE `report_days` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -155,4 +156,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-05 23:04:36
+-- Dump completed on 2021-09-11 17:01:27
