@@ -2,12 +2,16 @@ package notifications;
 
 import bot.ReportingBot;
 import hibernate.access.NotificationDao;
+import hibernate.entities.Client;
 import messages.Message;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import stateMachine.State;
+import utils.SendHelper;
 import utils.Utils;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.List;
@@ -29,9 +33,13 @@ public class MessageNotificator {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                for (long uid : NotificationDao.getClientUids(LocalDateTime.now())) {
+                for (Client client : NotificationDao.getClients(LocalDateTime.now())) {
                     SendMessage sm = new SendMessage();
-                    sm.setChatId(uid);
+                    sm.setChatId(client.getUid());
+                    if (client.getState() == State.MENU_CHOICE.ordinal()) {
+                        SendHelper.setInlineKeyboard(sm,
+                                Message.actionsMenu, null);
+                    }
                     sm.setText(Message.NOTIFICATION);
                     try {
                         bot.execute(sm);

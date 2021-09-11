@@ -26,6 +26,12 @@ public class Message {
 
     public static final String CONFIRM_SYMBOL = "✅ ";
 
+    public static final String EXTRA_CONFIRM_SYMBOL = "📌 ";
+
+    public static final String APPROVE = "📝 Подтвердить";
+
+    public static final String DELIMETR = "/";
+
     public static final String MENU = "Выберите действие";
 
     public static final String DISCHARGE_ACTION_ENABLED  = "Я больше не буду беспокоить тебя своими оповещениями";
@@ -50,8 +56,6 @@ public class Message {
 
     public static final String REGISTER_NAME = "Выберите свое имя";
 
-    public static final String REGISTER_POSITION = "Введите свою должность";
-
     public static final String CHOOSE_DAY = "Выберите день";
 
     public static final String ERROR_EMPTY_FIO = "Некорректное ФИО";
@@ -68,7 +72,7 @@ public class Message {
 
     public static final String CHOOSE_REPORT_TYPE = "Выберите за какой день отчитываться";
 
-    public static final String SELECT_PROJECT = "Выберите проект на котором работали";
+    public static final String SELECT_PROJECT = "Выберите 1 главный проект и до 3-ех дополнительных объектов на которых работали";
 
     public static final String INFO_ABOUT_JOB = "Напишите краткий отчет о проделанной работе";
 

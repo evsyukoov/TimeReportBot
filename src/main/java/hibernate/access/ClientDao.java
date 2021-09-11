@@ -1,10 +1,13 @@
 package hibernate.access;
 
 import hibernate.entities.Client;
+import messages.Message;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import stateMachine.State;
+
+import java.util.List;
 
 import java.time.LocalDateTime;
 
@@ -86,19 +89,9 @@ public class ClientDao {
     public static void clearClient(Client client) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
-            client.setDescription(null);
             client.setProject(null);
             client.setDateTime(null);
-            session.update(client);
-            session.getTransaction().commit();
-        }
-    }
-
-    public static void updateDescription(Client client, final int state,  final String description) {
-        try(Session session = factory.getCurrentSession()) {
-            session.beginTransaction();
-            client.setState(state);
-            client.setDescription(description);
+            client.setExtraProjects(null);
             session.update(client);
             session.getTransaction().commit();
         }
@@ -106,12 +99,18 @@ public class ClientDao {
 
     public static void updateProject(Client client,
                                      final int state,
-                                     final String project,
+                                     final List<String> projects,
                                      LocalDateTime date) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             client.setState(state);
-            client.setProject(project);
+            client.setProject(projects.get(0));
+            if (projects.size() > 1) {
+                client.setExtraProjects(Message.DELIMETR.concat
+                        (String.join(Message.DELIMETR,
+                                projects.subList(1, projects.size()))
+                                .concat(Message.DELIMETR)));
+            }
             client.setDateTime(date);
             session.update(client);
             session.getTransaction().commit();

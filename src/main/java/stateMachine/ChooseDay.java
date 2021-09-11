@@ -6,15 +6,10 @@ import messages.Message;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import utils.SendHelper;
 
-public class ChooseDay implements AbstractBotState {
-
-    SendMessage sm;
-
-    BotContext context;
+public class ChooseDay extends AbstractBotState {
 
     public ChooseDay(BotContext context) {
-        this.sm = new SendMessage();
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -25,10 +20,5 @@ public class ChooseDay implements AbstractBotState {
         if ((sm = handler.handleBackButton()) != null
         || (sm = handler.handleReportChoice()) != null)
             question();
-    }
-
-    @Override
-    public void question() {
-        SendHelper.sendMessage(sm, context);
     }
 }

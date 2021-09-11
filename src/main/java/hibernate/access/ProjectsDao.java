@@ -1,19 +1,11 @@
 package hibernate.access;
 
-import exceptions.AlreadyContainsProjectException;
-import hibernate.entities.Client;
 import hibernate.entities.Project;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.CriteriaQuery;
-import org.hibernate.criterion.Restrictions;
 
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 

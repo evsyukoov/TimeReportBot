@@ -8,15 +8,10 @@ import hibernate.access.ClientDao;
 import messages.Message;
 import utils.Utils;
 
-public class RegisterName implements AbstractBotState {
-
-    private BotContext context;
-
-    SendMessage sm;
+public class RegisterName extends AbstractBotState {
 
     public RegisterName(BotContext context) {
-        this.context = context;
-        sm = new SendMessage();
+        super(context);
     }
 
     @Override
@@ -26,11 +21,6 @@ public class RegisterName implements AbstractBotState {
         SendHelper.setInlineKeyboardOneColumn(sm,
                 EmployeeDao.getEmployeeNames(),null);
         question();
-    }
-
-    @Override
-    public void question() {
-        SendHelper.sendMessage(sm, context);
     }
 
 }

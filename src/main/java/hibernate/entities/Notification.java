@@ -1,9 +1,6 @@
 package hibernate.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,6 +13,10 @@ public class Notification {
 
     @Column(name = "nextFireTime")
     private LocalDateTime nextFireTime;
+
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "uid", referencedColumnName = "uid")
+    public Client client;
 
     public long getUid() {
         return uid;
@@ -31,5 +32,13 @@ public class Notification {
 
     public void setNextFireTime(LocalDateTime nextFireTime) {
         this.nextFireTime = nextFireTime;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

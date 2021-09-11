@@ -1,7 +1,6 @@
 package handlers;
 
 import bot.BotContext;
-import com.google.inject.internal.cglib.core.$CollectionUtils;
 import exceptions.DateAfterTodayException;
 import hibernate.access.ClientDao;
 import hibernate.access.NotificationDao;
@@ -10,8 +9,10 @@ import hibernate.access.ReportDaysDao;
 import hibernate.entities.Project;
 import messages.Message;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import stateMachine.EnumTranslators;
 import stateMachine.State;
 import utils.SendHelper;
@@ -19,10 +20,8 @@ import utils.Utils;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MainCommandsHandler {
     BotContext context;
@@ -50,7 +49,7 @@ public class MainCommandsHandler {
             if (message.equals(Message.MENU)) {
               SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null);
             } else if (message.equals(Message.SELECT_PROJECT)) {
-                SendHelper.setInlineKeyboardProjects(sm, ProjectsDao.getProjects(), Message.BACK);
+                SendHelper.setInlineKeyboardProjects(sm, ProjectsDao.getProjects());
             } else if (message.equals(Message.CHOOSE_REPORT_TYPE)) {
                 SendHelper.setInlineKeyboard(sm, Message.days, Message.BACK);
             } else if (message.equals(Message.SELECT_DATE)) {
@@ -164,7 +163,7 @@ public class MainCommandsHandler {
         }
         ClientDao.updateDate(context.getClient(), State.SELECT_PROJECT.ordinal(), date);
         List<Project> projects = ProjectsDao.getProjects();
-        SendHelper.setInlineKeyboardProjects(sm, projects, Message.BACK);
+        SendHelper.setInlineKeyboardProjects(sm, projects);
         sm.setText(Message.SELECT_PROJECT);
         return sm;
     }
@@ -176,7 +175,7 @@ public class MainCommandsHandler {
             List<Project> projects = ProjectsDao.getProjects();
             message.setText(EnumTranslators.translate(State.SELECT_PROJECT.ordinal()));
             SendHelper.refreshInlineKeyboard(context);
-            SendHelper.setInlineKeyboardProjects(message, projects, Message.BACK);
+            SendHelper.setInlineKeyboardProjects(message, projects);
             ClientDao.updateStates(context.getClient(), State.SELECT_PROJECT.ordinal());
             return message;
         }
@@ -189,7 +188,6 @@ public class MainCommandsHandler {
         }
         return null;
     }
-
 
     private boolean isValidTimeBoxChoice(String currentPress) {
         InlineKeyboardMarkup markup = context.getUpdate().getCallbackQuery().
@@ -220,6 +218,121 @@ public class MainCommandsHandler {
         if (isValidTimeBoxChoice(command)) {
             SendHelper.refreshInlineKeyboard(context);
         }
+    }
+
+    public long countFilledBoxes(String telegramSymbol, InlineKeyboardMarkup markup) {
+        return markup.getKeyboard().stream()
+                .flatMap(Collection::stream)
+                .filter(button -> button.getText().contains(telegramSymbol))
+                .count();
+    }
+
+    public SendMessage handleProjectsChoice() {
+        if (!context.isCallBackQuery()) {
+            return null;
+        } else {
+            if (!context.getMessage().equals(Message.APPROVE)) {
+                handleProjectBox();
+                return null;
+            } else {
+                List<String> result = collectProjectChoice();
+                if (result.isEmpty()) {
+                    return null;
+                } else {
+                    ClientDao.updateProject(context.getClient(), State.FINISH.ordinal(), result,
+                            context.getClient().getDateTime() == null ? LocalDateTime.now() :
+                            context.getClient().getDateTime());
+                }
+            }
+        }
+        SendMessage sm = new SendMessage();
+        sm.setText(Message.INFO_ABOUT_JOB);
+        SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK);
+        return sm;
+    }
+
+    private List<String> collectProjectChoice() {
+        InlineKeyboardMarkup markup = context.getUpdate().getCallbackQuery().
+                getMessage().getReplyMarkup();
+        List<String> projects = new ArrayList<>();
+        InlineKeyboardButton mainProjectButton = findConfirmedBoxes(markup, Message.CONFIRM_SYMBOL);
+        if (mainProjectButton != null) {
+            projects.add(mainProjectButton.getCallbackData());
+            List<InlineKeyboardButton> extraButtons = findExtraConfirmedBoxes(markup, Message.EXTRA_CONFIRM_SYMBOL);
+
+            projects.addAll(extraButtons.stream()
+                    .map(InlineKeyboardButton::getCallbackData)
+                    .collect(Collectors.toList()));
+
+        }
+        return projects;
+    }
+
+    private InlineKeyboardButton findConfirmedBoxes(InlineKeyboardMarkup markup, String telegramSymbol) {
+        return markup.getKeyboard().stream()
+                .flatMap(Collection::stream)
+                .filter(button -> button.getText().contains(telegramSymbol))
+                .findAny()
+                .orElse(null);
+    }
+
+    private List<InlineKeyboardButton> findExtraConfirmedBoxes(InlineKeyboardMarkup markup, String telegramSymbol) {
+        return markup.getKeyboard().stream()
+                .flatMap(Collection::stream)
+                .filter(button -> button.getText().contains(telegramSymbol))
+                .collect(Collectors.toList());
+    }
+
+    private InlineKeyboardButton findPressedButton(InlineKeyboardMarkup markup, String text) {
+        return markup.getKeyboard().stream()
+                .flatMap(Collection::stream)
+                .filter(button -> button.getCallbackData().equals(text))
+                .findAny()
+                .orElse(null);
+    }
+
+    private void handleProjectBox() {
+        String command = context.getMessage();
+        InlineKeyboardMarkup markup = context.getUpdate().getCallbackQuery().
+                getMessage().getReplyMarkup();
+        int id = context.getUpdate().getCallbackQuery().getMessage().getMessageId();
+
+        InlineKeyboardButton pressedButton = findPressedButton(markup, command);
+        if (Objects.isNull(pressedButton)) {
+            return;
+        }
+
+        boolean isModified = false;
+        // главных объектов 1, дополнительных 3
+        if (countFilledBoxes(Message.CONFIRM_SYMBOL, markup) == 0) {
+            pressedButton.setText(pressedButton.getText().replace(Message.EMPTY_SYMBOL, Message.CONFIRM_SYMBOL));
+            isModified = true;
+        } else if (countFilledBoxes(Message.CONFIRM_SYMBOL, markup) == 1) {
+            if (pressedButton.getText().contains(Message.CONFIRM_SYMBOL)) {
+                pressedButton.setText(pressedButton.getText().replace(Message.CONFIRM_SYMBOL, Message.EMPTY_SYMBOL));
+                isModified = true;
+            } else {
+                if (pressedButton.getText().contains(Message.EXTRA_CONFIRM_SYMBOL)) {
+                    pressedButton.setText(pressedButton.getText().replace(Message.EXTRA_CONFIRM_SYMBOL, Message.EMPTY_SYMBOL));
+                    isModified = true;
+                } else if (countFilledBoxes(Message.EXTRA_CONFIRM_SYMBOL, markup) < 3){
+                    pressedButton.setText(pressedButton.getText().replace(Message.EMPTY_SYMBOL, Message.EXTRA_CONFIRM_SYMBOL));
+                    isModified = true;
+                }
+            }
+        }
+        if (isModified) {
+            EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup()
+                    .setMessageId(id)
+                    .setChatId(context.getClient().getUid())
+                    .setReplyMarkup(markup);
+            try {
+                context.getBot().execute(editMessageReplyMarkup);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 }

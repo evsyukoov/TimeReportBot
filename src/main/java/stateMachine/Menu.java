@@ -4,21 +4,15 @@ import bot.BotContext;
 import hibernate.access.ClientDao;
 import hibernate.access.EmployeeDao;
 import messages.Message;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import utils.SendHelper;
 import utils.Utils;
 
 import java.util.List;
 
-public class Menu implements AbstractBotState {
-
-    SendMessage sm;
-
-    BotContext context;
+public class Menu extends AbstractBotState {
 
     public Menu(BotContext context) {
-        this.context = context;
-        sm = new SendMessage();
+        super(context);
     }
 
     @Override
@@ -42,8 +36,4 @@ public class Menu implements AbstractBotState {
         ClientDao.updateName(context.getClient(), State.MENU_CHOICE.ordinal(), receive);
     }
 
-    @Override
-    public void question() {
-        SendHelper.sendMessage(sm, context);
-    }
 }

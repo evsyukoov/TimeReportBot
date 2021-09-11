@@ -29,6 +29,9 @@ public class ReportDay {
     @Column(name = "uid")
     private long uid;
 
+    @Column(name = "extra_projects")
+    private String extraProjects;
+
     public String getProject() {
         return project;
     }
@@ -67,5 +70,13 @@ public class ReportDay {
 
     public void setUid(long uid) {
         this.uid = uid;
+    }
+
+    public String getExtraProjects() {
+        return extraProjects;
+    }
+
+    public void setExtraProjects(String extraProjects) {
+        this.extraProjects = extraProjects;
     }
 }

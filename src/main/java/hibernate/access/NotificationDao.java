@@ -38,7 +38,9 @@ public class NotificationDao {
 
     public static void updateFireTime(long uid) {
         LocalDateTime nextFireTime = getNextFireTime(uid);
-        if (nextFireTime == null || nextFireTime.getDayOfMonth() > LocalDateTime.now().getDayOfMonth()) {
+        // не обновляем если не выставлено получение обновлений и если дата оповещения уже стоит на след день
+        if (nextFireTime == null || nextFireTime.toLocalDate().
+                isAfter(LocalDateTime.now().toLocalDate())) {
             return;
         }
         saveClientOption(nextFireTime.plusHours(24), uid);
@@ -62,8 +64,8 @@ public class NotificationDao {
     }
 
     // получаем клиентов, которым пора получить сообщение
-    public static List<Long> getClientUids(LocalDateTime time) {
-        List<Long> result;
+    public static List<Client> getClients(LocalDateTime time) {
+        List<Client> result;
         try (Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             Query<Notification> query = session.createQuery("FROM Notification " +
@@ -76,9 +78,10 @@ public class NotificationDao {
 
             result = notificationList
                     .stream()
-                    .map(Notification::getUid)
+                    .map(Notification::getClient)
                     .collect(Collectors.toList());
             session.getTransaction().commit();
+
         }
         return result;
     }

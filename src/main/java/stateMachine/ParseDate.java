@@ -6,29 +6,19 @@ import messages.Message;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import utils.SendHelper;
 
-public class ParseDate implements AbstractBotState {
-
-    BotContext context;
-
-    SendMessage sm;
+public class ParseDate extends AbstractBotState {
 
     public ParseDate(BotContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
     public void handleMessage() {
         MainCommandsHandler handler = new MainCommandsHandler(context,
                 State.CHOOSE_DAY, Message.CHOOSE_REPORT_TYPE);
-        if ((sm = handler.handleBackButton()) != null) {
-            question();
-        } else if ((sm = handler.parseDate()) != null) {
+        if ((sm = handler.handleBackButton()) != null
+        || (sm = handler.parseDate()) != null) {
             question();
         }
-    }
-
-    @Override
-    public void question() {
-        SendHelper.sendMessage(sm, context);
     }
 }

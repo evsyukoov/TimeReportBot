@@ -22,6 +22,6 @@
         <property name="hibernate.connection.useUnicode">true</property>
 
         <mapping class="hibernate.entities.Notification" />
-
+        <mapping class="hibernate.entities.Client" />
     </session-factory>
 </hibernate-configuration>

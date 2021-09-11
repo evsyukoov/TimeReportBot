@@ -8,13 +8,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import utils.SendHelper;
 import utils.Utils;
 
-public class ReportType implements AbstractBotState{
-    BotContext context;
-
-    SendMessage sm;
+public class ReportType extends AbstractBotState{
 
     public ReportType(BotContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -31,8 +28,4 @@ public class ReportType implements AbstractBotState{
         }
     }
 
-    @Override
-    public void question() {
-        SendHelper.sendMessage(sm,  context);
-    }
 }

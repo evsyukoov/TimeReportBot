@@ -53,7 +53,7 @@ public class SendHelper {
 
     // названия проектов не умещаются в CallBackData из-за размера, в callBack будем сетить id
     // и на следующем шаге получать по id название проекта
-    public static synchronized void setInlineKeyboardProjects(SendMessage sm, List<Project> buttons, String message) {
+    public static synchronized void setInlineKeyboardProjects(SendMessage sm, List<Project> buttons) {
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         List<InlineKeyboardButton> row = null;
@@ -64,12 +64,13 @@ public class SendHelper {
             row.add(new InlineKeyboardButton().setText(msg)
                     .setCallbackData(String.valueOf(buttons.get(i).getId())));
         }
-        if (message != null) {
-            row = new ArrayList<>();
-            rows.add(row);
-            row.add(new InlineKeyboardButton().setText(message)
-                    .setCallbackData(message));
-        }
+        row = new ArrayList<>();
+        rows.add(row);
+        row.add(new InlineKeyboardButton().setText(Message.BACK)
+                .setCallbackData(Message.BACK));
+        row.add(new InlineKeyboardButton().setText(Message.APPROVE)
+                .setCallbackData(Message.APPROVE));
+
         inlineKeyboard.setKeyboard(rows);
         sm.setReplyMarkup(inlineKeyboard);
     }

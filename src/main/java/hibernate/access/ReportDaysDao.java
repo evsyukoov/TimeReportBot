@@ -33,7 +33,7 @@ public class ReportDaysDao {
         return result;
     }
 
-    public static void saveOrUpdate(Client client) {
+    public static void saveOrUpdate(Client client, String description) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             Query query = session.createQuery("from ReportDay WHERE uid=:uid AND date=:date", ReportDay.class);
@@ -45,34 +45,20 @@ public class ReportDaysDao {
             if (!dayList.isEmpty()) {
                 ReportDay rd = dayList.get(0);
                 rd.setProject(client.getProject());
-                rd.setDescription(client.getDescription());
+                rd.setExtraProjects(client.getExtraProjects());
+                rd.setDescription(description);
                 session.update(rd);
             } else {
                 ReportDay rd = new ReportDay();
-                rd.setDescription(client.getDescription());
+                rd.setDescription(description);
                 rd.setName(client.getName());
                 rd.setProject(client.getProject());
+                rd.setExtraProjects(client.getExtraProjects());
                 rd.setUid(client.getUid());
                 // время ставим по МСК
                 rd.setDate(Utils.convertDate(client.getDateTime()));
                 session.save(rd);
             }
-            session.getTransaction().commit();
-        }
-    }
-
-    public static void createReportDay(Client client) {
-
-        try(Session session = factory.getCurrentSession()) {
-            session.beginTransaction();
-            ReportDay reportDay = new ReportDay();
-            reportDay.setDescription(client.getDescription());
-            reportDay.setName(client.getName());
-            reportDay.setProject(client.getProject());
-            reportDay.setUid(client.getUid());
-            // время ставим по МСК
-            reportDay.setDate(Utils.convertDate(client.getDateTime()));
-            session.save(reportDay);
             session.getTransaction().commit();
         }
     }

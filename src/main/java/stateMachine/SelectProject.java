@@ -12,14 +12,10 @@ import utils.SendHelper;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-public class SelectProject implements AbstractBotState {
-
-    SendMessage sm;
-
-    BotContext context;
+public class SelectProject extends AbstractBotState {
 
     public SelectProject(BotContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -34,26 +30,9 @@ public class SelectProject implements AbstractBotState {
             handler = new MainCommandsHandler(context,
                     State.PARSE_DATE, Message.SELECT_DATE);
         }
-        if ((sm = handler.handleBackButton()) != null) {
+        if ((sm = handler.handleBackButton()) != null
+                || (sm = handler.handleProjectsChoice()) != null) {
             question();
-        } else {
-            sm = new SendMessage();
-            String command = context.getMessage();
-            String project = ProjectsDao.getProjectById(command);
-            if (project != null) {
-                ClientDao.updateProject(context.getClient(),
-                        State.FINISH.ordinal(), command, context.getClient().getDateTime() == null ?
-                        LocalDateTime.now() : context.getClient().getDateTime());
-                SendHelper.refreshInlineKeyboard(context);
-                sm.setText(Message.INFO_ABOUT_JOB);
-                SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK);
-                question();
-            }
         }
-    }
-
-    @Override
-    public void question() {
-        SendHelper.sendMessage(sm, context);
     }
 }

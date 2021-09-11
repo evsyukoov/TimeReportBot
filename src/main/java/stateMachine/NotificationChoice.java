@@ -2,16 +2,11 @@ package stateMachine;
 
 import bot.BotContext;
 import handlers.MainCommandsHandler;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import utils.SendHelper;
 
-public class NotificationChoice implements AbstractBotState{
-    BotContext context;
-
-    SendMessage sm;
+public class NotificationChoice extends AbstractBotState{
 
     public NotificationChoice(BotContext context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -22,8 +17,4 @@ public class NotificationChoice implements AbstractBotState{
         }
     }
 
-    @Override
-    public void question() {
-        SendHelper.sendMessage(sm, context);
-    }
 }

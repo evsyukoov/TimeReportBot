@@ -22,9 +22,6 @@ public class Client {
     @Column(name = "state")
     private int state;
 
-    @Column(name = "current_description")
-    private String description;
-
     @Column(name = "current_project")
     private String project;
 
@@ -34,12 +31,23 @@ public class Client {
     @Column(name = "registered")
     private boolean registered;
 
+    @Column(name = "extra_projects")
+    private String extraProjects;
+
     public LocalDateTime getDateTime() {
         return dateTime;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public String getExtraProjects() {
+        return extraProjects;
+    }
+
+    public void setExtraProjects(String extraProjects) {
+        this.extraProjects = extraProjects;
     }
 
     public long getUid() {
@@ -64,14 +72,6 @@ public class Client {
 
     public void setState(int state) {
         this.state = state;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getProject() {

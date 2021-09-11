@@ -21,7 +21,7 @@ public class BotStateFactory {
             return new ChooseDay(context);
         } else if (state == PARSE_DATE) {
             return new ParseDate(context);
-        } if (state == SELECT_PROJECT) {
+        } else if (state == SELECT_PROJECT) {
             return new SelectProject(context);
         } else if (state == FINISH) {
             return new Finish(context);
