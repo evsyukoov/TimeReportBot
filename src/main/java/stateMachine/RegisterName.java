@@ -12,6 +12,7 @@ public class RegisterName extends AbstractBotState {
 
     public RegisterName(BotContext context) {
         super(context);
+        sm = new SendMessage();
     }
 
     @Override

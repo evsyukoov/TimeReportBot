@@ -4,6 +4,7 @@ import bot.BotContext;
 import hibernate.access.ClientDao;
 import hibernate.access.EmployeeDao;
 import messages.Message;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import utils.SendHelper;
 import utils.Utils;
 
@@ -13,6 +14,7 @@ public class Menu extends AbstractBotState {
 
     public Menu(BotContext context) {
         super(context);
+        sm = new SendMessage();
     }
 
     @Override
