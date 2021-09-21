@@ -23,7 +23,7 @@ public class ReportType extends AbstractBotState{
         } else {
             sm = new SendMessage();
             sm.setText(Message.CHOOSE_REPORT_TYPE);
-            SendHelper.setInlineKeyboard(sm, Message.days, null);
+            SendHelper.setInlineKeyboard(sm, Message.days, null, 2);
             question();
         }
     }

@@ -2,6 +2,8 @@ package handlers;
 
 import bot.BotContext;
 import exceptions.DateAfterTodayException;
+import exceptions.TooLongIntervalException;
+import exceptions.ValidationException;
 import hibernate.access.ClientDao;
 import hibernate.access.NotificationDao;
 import hibernate.access.ProjectsDao;
@@ -15,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import stateMachine.EnumTranslators;
 import stateMachine.State;
+import utils.DateTimeUtils;
 import utils.SendHelper;
 import utils.Utils;
 
@@ -47,13 +50,13 @@ public class MainCommandsHandler {
             SendMessage sm = new SendMessage();
             ClientDao.updateState(context.getClient(), newState.ordinal());
             if (message.equals(Message.MENU)) {
-              SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null);
+              SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);
             } else if (message.equals(Message.SELECT_PROJECT)) {
                 SendHelper.setInlineKeyboardProjects(sm, ProjectsDao.getProjects());
             } else if (message.equals(Message.CHOOSE_REPORT_TYPE)) {
-                SendHelper.setInlineKeyboard(sm, Message.days, Message.BACK);
+                SendHelper.setInlineKeyboard(sm, Message.days, Message.BACK, 2);
             } else if (message.equals(Message.SELECT_DATE)) {
-                SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK);
+                SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK, 2);
             }
             sm.setText(message);
             return sm;
@@ -61,18 +64,91 @@ public class MainCommandsHandler {
         return null;
     }
 
+    public SendMessage handleClearVacation() {
+        SendMessage sm = new SendMessage();
+        if (context.isCallBackQuery() && context.getMessage().equals(Message.CLEAR_VACATION)) {
+            sm.setText(Message.VACATION_IS_CLEAR);
+            ClientDao.updateClientVacationInfo(context.getClient(),
+                    State.MENU_CHOICE.ordinal(), null, null, false);
+            SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);
+            return sm;
+        }
+        return null;
+    }
+
+    public SendMessage handleVacationsDate() {
+        String command = context.getMessage();
+        Date[] res;
+        SendMessage sm;
+        if ((sm = handleClearVacation()) != null) {
+            return sm;
+        }
+        sm = new SendMessage();
+        ArrayList<String> buttons = new ArrayList<>();
+        boolean isVacationRegister = context.getClient().getStartVacation() != null
+                && context.getClient().getEndVacation() != null;
+        try {
+            buttons.add(Message.BACK);
+            if (isVacationRegister) {
+                buttons.add(Message.CLEAR_VACATION);
+            }
+            res = Utils.parseVacationsDate(command);
+        }
+        catch(Exception e) {
+            String finalMessage = null;
+            if (e instanceof ValidationException) {
+                finalMessage = Utils.generateResultMessage(Message.VACATION_DATES_VALIDATION_ERROR, Message.VACATION);
+            } else if (e instanceof ParseException) {
+                finalMessage = Utils.generateResultMessage(Message.ERROR_DATE_FORMAT, Message.VACATION);
+            } else if (e instanceof DateAfterTodayException) {
+                finalMessage = Utils.generateResultMessage(Message.VACATION_ERROR_END_DATE, Message.VACATION);
+            } else if (e instanceof TooLongIntervalException) {
+                finalMessage = Utils.generateResultMessage(Message.TOO_LONG_INTERVAL, Message.VACATION);
+            }
+            sm.setText(finalMessage);
+            SendHelper.setInlineKeyboard(sm, buttons, null, 2);
+            return sm;
+        }
+        if (isVacationRegister) {
+            sm.setText(Message.NOT_ALLOWED_INIT_VACATION);
+            SendHelper.setInlineKeyboard(sm, buttons, null, 2);
+            return sm;
+        }
+        boolean onVacation = DateTimeUtils.isBetweenStrict(res[0], res[1], new Date());
+        ClientDao.updateClientVacationInfo(context.getClient(), State.MENU_CHOICE.ordinal(), res[0], res[1], onVacation);
+        sm.setText(Message.VACATION_DATES_SET);
+        if (onVacation) {
+            sm.setText(Message.YOU_ARE_IN_VACATION_MODE);
+            SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.CLEAR_VACATION, 1);
+        } else {
+            SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);
+        }
+        return sm;
+    }
+
     public SendMessage handleMenuChoice() {
         String command = context.getMessage();
         SendMessage sm = new SendMessage();
         if (command.equals(Message.actionsMenu.get(0))) {
             ClientDao.updateState(context.getClient(), State.CHOOSE_DAY.ordinal());
-            SendHelper.setInlineKeyboard(sm, Message.days, Message.BACK);
+            SendHelper.setInlineKeyboard(sm, Message.days, Message.BACK, 2);
             sm.setText(Message.CHOOSE_REPORT_TYPE);
             return sm;
         } else if (command.equals(Message.actionsMenu.get(1))) {
             ClientDao.updateState(context.getClient(), State.NOTIFICATION_CHOICE.ordinal());
             SendHelper.setDateTimeInlineQuery(sm);
             sm.setText(Message.NOTIFICATION_CHOICE);
+            return sm;
+        } else if (command.equals(Message.actionsMenu.get(2))) {
+            ClientDao.updateState(context.getClient(), State.VACATION.ordinal());
+            ArrayList<String> actionButtons = new ArrayList<>();
+            actionButtons.add(Message.BACK);
+            if (context.getClient().getStartVacation() != null
+                    && context.getClient().getEndVacation() != null) {
+                actionButtons.add(Message.CLEAR_VACATION);
+            }
+            SendHelper.setInlineKeyboard(sm, actionButtons, null, 2);
+            sm.setText(Message.VACATION);
             return sm;
         }
         return null;
@@ -91,7 +167,7 @@ public class MainCommandsHandler {
             sm = new SendMessage();
             NotificationDao.saveClientOption(null, context.getClient().getUid());
             sm.setText(Utils.generateResultMessage(Message.DISCHARGE_ACTION_ENABLED, Message.MENU));
-            SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null);
+            SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);
             ClientDao.updateState(context.getClient(), State.MENU_CHOICE.ordinal());
             return sm;
         } else if (command.equals(Message.APPROVE_NOTIFICATION) &&
@@ -102,7 +178,7 @@ public class MainCommandsHandler {
                     String.format(Message.APPROVE_NOTIFICATION_ENABLED, getTimeStringFromDate(resultTime)),
                     Message.MENU));
 
-            SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null);
+            SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);
             ClientDao.updateState(context.getClient(), State.MENU_CHOICE.ordinal());
             return sm;
         }
@@ -153,12 +229,11 @@ public class MainCommandsHandler {
 
         } catch (DateAfterTodayException e) {
             sm.setText(Utils.generateResultMessage(Message.ERROR_DATE_AFTER_TODAY, Message.SELECT_DATE));
-            SendHelper.setInlineKeyboard(sm,Collections.emptyList(), Message.BACK);
+            SendHelper.setInlineKeyboard(sm,Collections.emptyList(), Message.BACK, 2);
             return sm;
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             sm.setText(Utils.generateResultMessage(Message.ERROR_DATE_FORMAT, Message.SELECT_DATE));
-            SendHelper.setInlineKeyboard(sm,Collections.emptyList(), Message.BACK);
+            SendHelper.setInlineKeyboard(sm,Collections.emptyList(), Message.BACK, 2);
             return sm;
         }
         ClientDao.updateDate(context.getClient(), State.SELECT_PROJECT.ordinal(), date);
@@ -171,7 +246,7 @@ public class MainCommandsHandler {
     public SendMessage handleReportChoice() {
         String command = context.getMessage();
         SendMessage message = new SendMessage();
-        if (command.equals(Message.days.get(1))) {
+        if (command.equals(Message.days.get(0))) {
             List<Project> projects = ProjectsDao.getProjects();
             message.setText(EnumTranslators.translate(State.SELECT_PROJECT.ordinal()));
             SendHelper.refreshInlineKeyboard(context);
@@ -179,10 +254,10 @@ public class MainCommandsHandler {
             ClientDao.updateStates(context.getClient(), State.SELECT_PROJECT.ordinal());
             return message;
         }
-        else if (command.equals(Message.days.get(0))) {
+        else if (command.equals(Message.days.get(1))) {
             message.setText(EnumTranslators.translate(State.PARSE_DATE.ordinal()));
             SendHelper.refreshInlineKeyboard(context);
-            SendHelper.setInlineKeyboard(message, Collections.emptyList(), Message.BACK);
+            SendHelper.setInlineKeyboard(message, Collections.emptyList(), Message.BACK, 2);
             ClientDao.updateStates(context.getClient(), State.PARSE_DATE.ordinal());
             return message;
         }
@@ -247,7 +322,7 @@ public class MainCommandsHandler {
         }
         SendMessage sm = new SendMessage();
         sm.setText(Message.INFO_ABOUT_JOB);
-        SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK);
+        SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK, 2);
         return sm;
     }
 
@@ -332,7 +407,6 @@ public class MainCommandsHandler {
                 e.printStackTrace();
             }
         }
-
     }
 
 }

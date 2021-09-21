@@ -5,6 +5,7 @@ import stateMachine.State;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "clients")
@@ -33,6 +34,41 @@ public class Client {
 
     @Column(name = "extra_projects")
     private String extraProjects;
+
+    @Column(name = "on_vacation")
+    private boolean onVacation;
+
+    @Column(name = "start_vacation")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startVacation;
+
+    @Column(name = "end_vacation")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endVacation;
+
+    public boolean isOnVacation() {
+        return onVacation;
+    }
+
+    public void setOnVacation(boolean onVacation) {
+        this.onVacation = onVacation;
+    }
+
+    public Date getStartVacation() {
+        return startVacation;
+    }
+
+    public void setStartVacation(Date startVacation) {
+        this.startVacation = startVacation;
+    }
+
+    public Date getEndVacation() {
+        return endVacation;
+    }
+
+    public void setEndVacation(Date endVacation) {
+        this.endVacation = endVacation;
+    }
 
     public LocalDateTime getDateTime() {
         return dateTime;

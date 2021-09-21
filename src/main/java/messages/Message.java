@@ -2,9 +2,7 @@ package messages;
 
 import utils.Utils;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Message {
 
@@ -81,5 +79,33 @@ public class Message {
     public static final String SELECT_DATE = "Введите день в формате dd.mm.yyyy";
 
     public static final String NOTIFICATION = "Не забудьте отчитаться за сегодняшний день";
+
+    public static final String VACATION = "Введите дату начала и окончания отпуска(дата первого рабочего дня) через пробел в формате dd.mm.yyyy\n" +
+            "Пример: 1.1.2021  15.1.2021";
+
+    public static final String VACATION_DATES_VALIDATION_ERROR = "Неверный разделитель начала и конца отпуска";
+
+    public static final String VACATION_ERROR_END_DATE = "Дата конца отпуска должна быть после даты начала";
+
+    public static final String YOU_ARE_IN_VACATION_MODE = "C этого момента вы находитесь в отпуске и вам недоступны какие-либо действия\n" +
+            "Вы получите уведомление по окончании отпуска";
+
+    public static final String FIX_VACATION_DAYS = "Исправить даты отпуска";
+
+    public static final String VACATION_DATES_SET = "Даты отпуска установлены";
+
+    public static final String CLEAR_VACATION = "🚫 Отменить отпуск";
+
+    public static final String VACATION_IS_CLEAR = "Отпуск отменен!";
+
+    public static final String NOT_ALLOWED_INIT_VACATION = "Вы уже зарегистрировали отпуск, для задания других дат его нужно сначала отменить";
+
+    public static final String YOU_ARE_IN_VACATION = "Сейчас вы находитесь в отпуске";
+
+    public static final String YOUR_VACATION_IS_OVER = "Ваш отпуск закончился";
+
+    public static final String VACATION_TO_SAVE = "Отпуск";
+
+    public static final String TOO_LONG_INTERVAL = "Выбран период отпуска, превышающий 30 дней";
 
 }

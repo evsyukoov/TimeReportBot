@@ -29,12 +29,12 @@ public class SendHelper {
         }
     }
 
-    public static synchronized void setInlineKeyboard(SendMessage sm, List<String> buttons, String message) {
+    public static synchronized void setInlineKeyboard(SendMessage sm, List<String> buttons, String message, int buttonsInRow) {
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         List<InlineKeyboardButton> row = null;
         for (int i = 0; i < buttons.size(); i++) {
-            if (i % 2 == 0) {
+            if (i % buttonsInRow == 0) {
                 row = new ArrayList<>();
                 rows.add(row);
             }

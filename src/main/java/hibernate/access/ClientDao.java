@@ -1,15 +1,19 @@
 package hibernate.access;
 
 import hibernate.entities.Client;
+import hibernate.entities.Notification;
 import messages.Message;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import stateMachine.State;
 
+import java.util.Date;
 import java.util.List;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 public class ClientDao {
 
@@ -115,5 +119,38 @@ public class ClientDao {
             session.update(client);
             session.getTransaction().commit();
         }
+    }
+
+    public static void updateClientVacationInfo(Client client, final int state, Date start, Date end, boolean onVacation) {
+        try(Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            client.setOnVacation(onVacation);
+            client.setStartVacation(start);
+            client.setEndVacation(end);
+            client.setState(state);
+            session.update(client);
+            session.getTransaction().commit();
+        }
+    }
+
+    public static void updateClientVacationInfo(Client client, boolean onVacation) {
+        try(Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            client.setOnVacation(onVacation);
+            session.update(client);
+            session.getTransaction().commit();
+        }
+    }
+
+    public static List<Client> getClientsWithVacations() {
+        List<Client> result;
+        try (Session session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            Query<Client> query = session.createQuery("FROM Client " +
+                    "WHERE startVacation IS NOT NULL AND endVacation IS NOT NULL", Client.class);
+            result = query.getResultList();
+            session.getTransaction().commit();
+        }
+        return result;
     }
 }

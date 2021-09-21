@@ -1,8 +1,8 @@
 package bot;
 
 import handlers.NewMessageHandler;
-import hibernate.access.NotificationDao;
-import notifications.MessageNotificator;
+import tasks.MessageNotificator;
+import tasks.VacationThread;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -12,6 +12,7 @@ import stateMachine.AbstractBotState;
 import utils.SendHelper;
 
 import java.io.FileInputStream;
+import java.util.TimeZone;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -23,8 +24,10 @@ public class ReportingBot extends TelegramLongPollingBot {
 
     public ReportingBot() {
         MessageNotificator notificator = new MessageNotificator(this);
+        VacationThread vacationThread = new VacationThread(this);
         notificator.notificate();
         notificator.updateMessage();
+        vacationThread.doJob();
     }
 
     private static final Logger logger = Logger.getLogger(ReportingBot.class.getName());
@@ -35,7 +38,9 @@ public class ReportingBot extends TelegramLongPollingBot {
             NewMessageHandler handler = new NewMessageHandler(update, this);
             AbstractBotState botState = handler.getBotState();
             if (botState == null) {
-                SendHelper.sendMessage(handler.getSendMessage(), handler.getContext());
+                if (handler.getSendMessage() != null) {
+                    SendHelper.sendMessage(handler.getSendMessage(), handler.getContext());
+                }
                 return;
             }
             botState.handleMessage();
@@ -53,8 +58,10 @@ public class ReportingBot extends TelegramLongPollingBot {
     }
 
     public static void main(String[] args) throws Exception {
+        //TODO логирование на отправку сообщений, логирование в тредах
         LogManager.getLogManager().readConfiguration
                 (new FileInputStream("./src/main/resources/logging.properties"));
+        TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
         TelegramBotsApi botsApi = new TelegramBotsApi();
         ApiContextInitializer.init();
         try {

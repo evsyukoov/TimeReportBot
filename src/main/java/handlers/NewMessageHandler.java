@@ -15,6 +15,8 @@ import stateMachine.State;
 import utils.SendHelper;
 import utils.Utils;
 
+import java.util.Collections;
+
 public class NewMessageHandler {
 
     private final Update update;
@@ -59,6 +61,11 @@ public class NewMessageHandler {
         if ((sendMessage = handleStartStop()) != null) {
             return null;
         }
+        //vacationMode также хенлим сразу
+        if (client.isOnVacation()) {
+            sendMessage = new MainCommandsHandler(context).handleClearVacation();
+            return null;
+        }
         return BotStateFactory.createBotState(current, new BotContext(bot, update, client, callBack, newMsg));
     }
 
@@ -68,14 +75,19 @@ public class NewMessageHandler {
         if (command.equals(Message.START) || command.equals(Message.STOP)) {
             sm = new SendMessage();
             Client client = context.getClient();
-            if (client.isRegistered()) {
-                ClientDao.updateState(client, State.MENU_CHOICE.ordinal());
-                SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null);
-                sm.setText(Message.MENU);
+            if (!client.isOnVacation()) {
+                if (client.isRegistered()) {
+                    ClientDao.updateState(client, State.MENU_CHOICE.ordinal());
+                    SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);
+                    sm.setText(Message.MENU);
+                } else {
+                    ClientDao.updateState(client, State.MENU.ordinal());
+                    SendHelper.setInlineKeyboardOneColumn(sm, EmployeeDao.getEmployeeNames(), null);
+                    sm.setText(Message.REGISTER_NAME);
+                }
             } else {
-                ClientDao.updateState(client, State.MENU.ordinal());
-                SendHelper.setInlineKeyboardOneColumn(sm, EmployeeDao.getEmployeeNames(), null);
-                sm.setText(Message.REGISTER_NAME);
+                SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.CLEAR_VACATION, 1);
+                sm.setText(Message.YOU_ARE_IN_VACATION);
             }
         }
         return sm;

@@ -33,7 +33,7 @@ public class Menu extends AbstractBotState {
             sm.setText(Message.MENU);
         }
         SendHelper.refreshInlineKeyboard(context);
-        SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null);
+        SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);
         question();
         ClientDao.updateName(context.getClient(), State.MENU_CHOICE.ordinal(), receive);
     }

@@ -13,6 +13,8 @@ public class BotStateFactory {
             return new Menu(context);
         } else if (state == MENU_CHOICE) {
             return new MenuChoice(context);
+        } else if (state == VACATION) {
+            return new Vacation(context);
         } else if (state == NOTIFICATION_CHOICE) {
             return new NotificationChoice(context);
         }  else if (state == REPORT_TYPE) {

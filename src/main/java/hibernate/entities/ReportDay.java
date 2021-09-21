@@ -2,7 +2,7 @@ package hibernate.entities;
 
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +24,7 @@ public class ReportDay {
     private String description;
 
     @Column(name = "date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     @Column(name = "uid")

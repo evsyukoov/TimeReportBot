@@ -25,7 +25,7 @@ public class Finish extends AbstractBotState {
         } else if (!context.isCallBackQuery()) {
             sm = new SendMessage();
             sm.setText(Utils.generateResultMessage(Message.FINISH, Message.MENU));
-            SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null);
+            SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);
             ClientDao.updateState(context.getClient(), State.MENU_CHOICE.ordinal());
             ReportDaysDao.saveOrUpdate(context.getClient(), context.getMessage());
             NotificationDao.updateFireTime(context.getClient().getUid());
