@@ -30,6 +30,9 @@ CREATE TABLE `clients` (
   `registered` tinyint(4) DEFAULT NULL,
   `report_date` datetime DEFAULT NULL,
   `extra_projects` varchar(45) DEFAULT NULL,
+  `on_vacation` tinyint(4) DEFAULT NULL,
+  `start_vacation` date DEFAULT NULL,
+  `end_vacation` date DEFAULT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -40,7 +43,6 @@ CREATE TABLE `clients` (
 
 LOCK TABLES `clients` WRITE;
 /*!40000 ALTER TABLE `clients` DISABLE KEYS */;
-INSERT INTO `clients` VALUES (349939502,'Тестовый Для Проверки',2,NULL,1,NULL,NULL);
 /*!40000 ALTER TABLE `clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +92,6 @@ CREATE TABLE `notification` (
 
 LOCK TABLES `notification` WRITE;
 /*!40000 ALTER TABLE `notification` DISABLE KEYS */;
-INSERT INTO `notification` VALUES (349939502,NULL);
 /*!40000 ALTER TABLE `notification` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -134,7 +135,7 @@ CREATE TABLE `report_days` (
   `uid` int(20) DEFAULT NULL,
   `extra_projects` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5359 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,7 +144,6 @@ CREATE TABLE `report_days` (
 
 LOCK TABLES `report_days` WRITE;
 /*!40000 ALTER TABLE `report_days` DISABLE KEYS */;
-INSERT INTO `report_days` VALUES (30,'2021-09-05','Тестовый Для Проверки','25','Все сделано',349939502,NULL),(31,'2021-09-08','Тестовый Для Проверки','87','jvhjvb',349939502,NULL),(32,'2021-09-11','Тестовый Для Проверки','87','ghdt',349939502,'/86/'),(33,'2000-01-01','Тестовый Для Проверки','87','wegwrgwg',349939502,'/82/83/84/'),(34,'2020-02-02','Тестовый Для Проверки','87','3rg3rg3rg3',349939502,'/83/');
 /*!40000 ALTER TABLE `report_days` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -156,4 +156,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-11 17:01:27
+-- Dump completed on 2021-09-21 14:06:31
