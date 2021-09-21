@@ -29,7 +29,7 @@ public class ReportDaysDao {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             Query<ReportDay> query = session.createQuery("from ReportDay WHERE date = :date AND uid = :uid", ReportDay.class);
-            java.sql.Date now = DateTimeUtils.convertDate(LocalDateTime.now());
+            Date now = DateTimeUtils.fromLocalDate(LocalDate.now());
             query.setParameter("date", now);
             query.setParameter("uid", client.getUid());
             result = !Utils.isEmpty(query.getResultList());
