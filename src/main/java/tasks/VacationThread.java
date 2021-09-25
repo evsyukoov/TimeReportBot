@@ -29,7 +29,7 @@ public class VacationThread {
 
     public void doJob() {
         Timer timer = new Timer();
-        Date date = Date.from(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).plusDays(1).toInstant(ZoneOffset.ofHours(0)));
+        Date date = Date.from(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).plusDays(1).toInstant(ZoneOffset.ofHours(3)));
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
