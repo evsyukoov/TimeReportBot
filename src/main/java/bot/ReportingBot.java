@@ -1,9 +1,9 @@
 package bot;
 
 import handlers.NewMessageHandler;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import tasks.MessageNotificator;
 import tasks.VacationThread;
-import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -62,8 +62,7 @@ public class ReportingBot extends TelegramLongPollingBot {
         LogManager.getLogManager().readConfiguration
                 (new FileInputStream("./src/main/resources/logging.properties"));
         TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
-        TelegramBotsApi botsApi = new TelegramBotsApi();
-        ApiContextInitializer.init();
+        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
             botsApi.registerBot(new ReportingBot());
         } catch (TelegramApiRequestException e) {

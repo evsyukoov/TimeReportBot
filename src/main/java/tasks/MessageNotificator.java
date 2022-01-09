@@ -48,7 +48,7 @@ public class MessageNotificator {
                         continue;
                     }
                     SendMessage sm = new SendMessage();
-                    sm.setChatId(client.getUid());
+                    sm.setChatId(String.valueOf(client.getUid()));
                     if (client.getState() == State.MENU_CHOICE.ordinal()) {
                         SendHelper.setInlineKeyboard(sm,
                                 Message.actionsMenu, null, 3);
@@ -113,7 +113,7 @@ public class MessageNotificator {
         List<Long> uids = Utils.getUidsFromProps("./src/main/resources/property/update.properties");
         for (long uid : uids) {
             SendMessage sm = new SendMessage();
-            sm.setChatId(uid);
+            sm.setChatId(String.valueOf(uid));
             sm.setText("Добавлены справочники, оповещения. Для старта введите /start");
             try {
                 bot.execute(sm);

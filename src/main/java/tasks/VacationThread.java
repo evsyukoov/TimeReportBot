@@ -42,7 +42,7 @@ public class VacationThread {
                             sm = new SendMessage();
                             ClientDao.updateClientVacationInfo(client, true);
                             sm.setText(Message.YOU_ARE_IN_VACATION_MODE);
-                            sm.setChatId(client.getUid());
+                            sm.setChatId(String.valueOf(client.getUid()));
                             SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.CLEAR_VACATION, 1);
                         }
                         //случай для клиентов проставивших отпуск задним числом
@@ -58,7 +58,7 @@ public class VacationThread {
                             ClientDao.updateClientVacationInfo(client,
                                     State.MENU_CHOICE.ordinal(), null, null, false);
                             sm.setText(Message.YOUR_VACATION_IS_OVER);
-                            sm.setChatId(client.getUid());
+                            sm.setChatId(String.valueOf(client.getUid()));
                             SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);
                         }
                     }

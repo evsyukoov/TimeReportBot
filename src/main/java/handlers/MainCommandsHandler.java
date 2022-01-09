@@ -397,10 +397,11 @@ public class MainCommandsHandler {
             }
         }
         if (isModified) {
-            EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup()
-                    .setMessageId(id)
-                    .setChatId(context.getClient().getUid())
-                    .setReplyMarkup(markup);
+            EditMessageReplyMarkup editMessageReplyMarkup = EditMessageReplyMarkup.builder()
+                    .messageId(id)
+                    .chatId(String.valueOf(context.getClient().getUid()))
+                    .replyMarkup(markup)
+                    .build();
             try {
                 context.getBot().execute(editMessageReplyMarkup);
             } catch (TelegramApiException e) {

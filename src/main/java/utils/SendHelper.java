@@ -21,7 +21,7 @@ public class SendHelper {
     private static final Logger logger = Logger.getLogger(RegisterName.class.getName());
 
     public static void sendMessage(SendMessage sendMessage, BotContext context){
-        sendMessage.setChatId(context.getClient().getUid());
+        sendMessage.setChatId(String.valueOf(context.getClient().getUid()));
         try {
             context.getBot().execute(sendMessage);
         } catch (TelegramApiException e) {
@@ -38,17 +38,26 @@ public class SendHelper {
                 row = new ArrayList<>();
                 rows.add(row);
             }
-            row.add(new InlineKeyboardButton().setText(buttons.get(i))
-                    .setCallbackData(buttons.get(i)));
+            row.add(newButton(buttons.get(i)));
         }
         if (message != null) {
             row = new ArrayList<>();
             rows.add(row);
-            row.add(new InlineKeyboardButton().setText(message)
-                    .setCallbackData(message));
+            row.add(newButton(message));
         }
         inlineKeyboard.setKeyboard(rows);
         sm.setReplyMarkup(inlineKeyboard);
+    }
+
+    private static InlineKeyboardButton newButton(String message) {
+        return newButton(message, message);
+    }
+
+    private static InlineKeyboardButton newButton(String message, String callbackData) {
+        InlineKeyboardButton button= new InlineKeyboardButton();
+        button.setText(message);
+        button.setCallbackData(callbackData);
+        return button;
     }
 
     // названия проектов не умещаются в CallBackData из-за размера, в callBack будем сетить id
@@ -61,15 +70,12 @@ public class SendHelper {
             row = new ArrayList<>();
             rows.add(row);
             String msg = Message.EMPTY_SYMBOL.concat(buttons.get(i).getProjectName());
-            row.add(new InlineKeyboardButton().setText(msg)
-                    .setCallbackData(String.valueOf(buttons.get(i).getId())));
+            row.add(newButton(msg, String.valueOf(buttons.get(i).getId())));
         }
         row = new ArrayList<>();
         rows.add(row);
-        row.add(new InlineKeyboardButton().setText(Message.BACK)
-                .setCallbackData(Message.BACK));
-        row.add(new InlineKeyboardButton().setText(Message.APPROVE)
-                .setCallbackData(Message.APPROVE));
+        row.add(newButton(Message.BACK));
+        row.add(newButton(Message.APPROVE));
 
         inlineKeyboard.setKeyboard(rows);
         sm.setReplyMarkup(inlineKeyboard);
@@ -83,14 +89,12 @@ public class SendHelper {
             row = new ArrayList<>();
             rows.add(row);
             String msg = Message.EMPTY_SYMBOL.concat(buttons.get(i));
-            row.add(new InlineKeyboardButton().setText(msg)
-                    .setCallbackData(buttons.get(i)));
+            row.add(newButton(msg, buttons.get(i)));
         }
         if (message != null) {
             row = new ArrayList<>();
             rows.add(row);
-            row.add(new InlineKeyboardButton().setText(message)
-                    .setCallbackData(message));
+            row.add(newButton(message));
         }
         inlineKeyboard.setKeyboard(rows);
         sm.setReplyMarkup(inlineKeyboard);
@@ -117,10 +121,11 @@ public class SendHelper {
                     }
                 });
         if (isChanged.get()) {
-            EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup()
-                    .setMessageId(id)
-                    .setChatId(context.getClient().getUid())
-                    .setReplyMarkup(markup);
+            EditMessageReplyMarkup editMessageReplyMarkup = EditMessageReplyMarkup.builder()
+                    .messageId(id)
+                    .chatId(String.valueOf(context.getClient().getUid()))
+                    .replyMarkup(markup)
+                    .build();
             try {
                 context.getBot().execute(editMessageReplyMarkup);
             } catch (TelegramApiException e) {
@@ -140,8 +145,7 @@ public class SendHelper {
             }
             String time = getTime(i, "час.");
             String msg = Message.EMPTY_SYMBOL.concat(time);
-            row.add(new InlineKeyboardButton().setText(msg)
-                    .setCallbackData(time));
+            row.add(newButton(msg, time));
         }
         for (int i = 0; i < 60; i += 5) {
             if (i % 15 == 0) {
@@ -150,15 +154,12 @@ public class SendHelper {
             }
             String time = getTime(i, "мин.");
             String msg = Message.EMPTY_SYMBOL.concat(time);
-            row.add(new InlineKeyboardButton().setText(msg)
-                    .setCallbackData(time));
+            row.add(newButton(msg, time));
         }
         row = new ArrayList<>();
         rows.add(row);
-        row.add(new InlineKeyboardButton().setText(Message.DISCHARGE_NOTIFICATION)
-                    .setCallbackData(Message.DISCHARGE_NOTIFICATION));
-        row.add(new InlineKeyboardButton().setText(Message.APPROVE_NOTIFICATION)
-                .setCallbackData(Message.APPROVE_NOTIFICATION));
+        row.add(newButton(Message.DISCHARGE_NOTIFICATION));
+        row.add(newButton(Message.APPROVE_NOTIFICATION));
         inlineKeyboard.setKeyboard(rows);
         sm.setReplyMarkup(inlineKeyboard);
     }
