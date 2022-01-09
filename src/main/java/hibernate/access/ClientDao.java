@@ -1,7 +1,6 @@
 package hibernate.access;
 
 import hibernate.entities.Client;
-import hibernate.entities.Notification;
 import messages.Message;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 public class ClientDao {
 
@@ -21,7 +19,7 @@ public class ClientDao {
 
     static {
         factory = new Configuration()
-                .configure("hibernate_clients.cfg.xml")
+                .configure("hibernate_conf.cfg.xml")
                 .buildSessionFactory();
     }
 

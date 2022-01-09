@@ -20,7 +20,7 @@ public class ReportDaysDao {
 
     static {
         factory = new Configuration()
-                .configure("hibernate_work.cfg.xml")
+                .configure("hibernate_conf.cfg.xml")
                 .buildSessionFactory();
     }
 

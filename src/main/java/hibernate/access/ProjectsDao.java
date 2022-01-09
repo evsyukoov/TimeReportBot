@@ -14,7 +14,7 @@ public class ProjectsDao {
 
     static {
         factory = new Configuration()
-                .configure("hibernate_projects.cfg.xml")
+                .configure("hibernate_conf.cfg.xml")
                 .buildSessionFactory();
     }
 

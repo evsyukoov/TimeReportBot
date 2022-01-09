@@ -7,9 +7,9 @@
     <session-factory>
         <!-- Database connection settings -->
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/reporting_bot?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC&amp;autoReconnect=true&amp;interactiveClient=true</property>
+        <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/reporting_bot?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC&amp;useTimezone=true&amp;autoReconnect=true&amp;interactiveClient=true</property>
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">1111</property>
+<!--        <property name="hibernate.connection.password">1111</property>-->
         <!-- JDBC connection pool (use the built-in) -->
         <property name="hibernate.connection.pool_size">8</property>
         <!-- Echo all executed SQL to stdout -->
@@ -21,7 +21,11 @@
         <property name="hibernate.connection.characterEncoding">utf8</property>
         <property name="hibernate.connection.useUnicode">true</property>
 
+        <mapping class="hibernate.entities.Client" />
         <mapping class="hibernate.entities.Employee" />
+        <mapping class="hibernate.entities.Notification" />
+        <mapping class="hibernate.entities.Project" />
+        <mapping class="hibernate.entities.ReportDay" />
 
     </session-factory>
 </hibernate-configuration>

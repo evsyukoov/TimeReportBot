@@ -12,7 +12,7 @@ public class EmployeeDao {
 
     static {
         factory = new Configuration()
-                .configure("hibernate_employee.cfg.xml")
+                .configure("hibernate_conf.cfg.xml")
                 .buildSessionFactory();
     }
 

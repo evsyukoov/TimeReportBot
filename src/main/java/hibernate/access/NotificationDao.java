@@ -21,7 +21,7 @@ public class NotificationDao {
 
     static {
         factory = new Configuration()
-                .configure("hibernate_notification.cfg.xml")
+                .configure("hibernate_conf.cfg.xml")
                 .buildSessionFactory();
     }
 
