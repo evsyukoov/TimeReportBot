@@ -321,8 +321,8 @@ public class MainCommandsHandler {
             }
         }
         SendMessage sm = new SendMessage();
-        sm.setText(Message.INFO_ABOUT_JOB);
-        SendHelper.setInlineKeyboard(sm, Collections.emptyList(), Message.BACK, 2);
+        sm.setText(Utils.generateResultMessage(Message.FINISH, Message.MENU));
+        SendHelper.setInlineKeyboard(sm, Message.actionsMenu, null, 3);;
         return sm;
     }
 

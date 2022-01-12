@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import javax.persistence.Query;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,9 @@ public class ProjectsDao {
             projects = session.createQuery("from Project", Project.class).list();
             session.getTransaction().commit();
         }
-        return projects;
+        return projects.stream()
+                .sorted(Comparator.comparing(p -> p.getProjectName().toUpperCase()))
+                .collect(Collectors.toList());
     }
 
     public static String getProjectById(String id) {

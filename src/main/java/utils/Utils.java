@@ -115,4 +115,11 @@ public class Utils {
         return result;
     }
 
+    public static String firstLetterToUpperCase(String s) {
+        if (s != null && !s.isEmpty()) {
+            return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+        }
+        return s;
+    }
+
 }

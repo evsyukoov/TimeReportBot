@@ -66,11 +66,9 @@ public class ReportDaysDao {
                 ReportDay rd = dayList.get(0);
                 rd.setProject(client.getProject());
                 rd.setExtraProjects(client.getExtraProjects());
-                rd.setDescription(description);
                 session.update(rd);
             } else {
                 ReportDay rd = new ReportDay();
-                rd.setDescription(description);
                 rd.setName(client.getName());
                 rd.setProject(client.getProject());
                 rd.setExtraProjects(client.getExtraProjects());
@@ -83,7 +81,7 @@ public class ReportDaysDao {
         }
     }
 
-    public static void saveOrUpdate(Client client, String description, Date date) {
+    public static void saveOrUpdate(Client client, Date date) {
         try(Session session = factory.getCurrentSession()) {
             session.beginTransaction();
             Query<ReportDay> query = session.createQuery("from ReportDay WHERE uid=:uid AND date=:date", ReportDay.class);
@@ -96,11 +94,9 @@ public class ReportDaysDao {
                 ReportDay rd = dayList.get(0);
                 rd.setProject(client.getProject());
                 rd.setExtraProjects(client.getExtraProjects());
-                rd.setDescription(description);
                 session.update(rd);
             } else {
                 ReportDay rd = new ReportDay();
-                rd.setDescription(description);
                 rd.setName(client.getName());
                 rd.setProject(client.getProject());
                 rd.setExtraProjects(client.getExtraProjects());

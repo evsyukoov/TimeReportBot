@@ -20,9 +20,6 @@ public class ReportDay {
     @Column(name = "project")
     private String project;
 
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
@@ -39,14 +36,6 @@ public class ReportDay {
 
     public void setProject(String project) {
         this.project = project;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Date getDate() {

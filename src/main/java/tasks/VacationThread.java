@@ -77,7 +77,7 @@ public class VacationThread {
     private void updateReportDaysInfo(Client client) {
         Date start = client.getStartVacation();
         while (start.before(client.getEndVacation())) {
-            ReportDaysDao.saveOrUpdate(client, Message.VACATION_TO_SAVE, start);
+            ReportDaysDao.saveOrUpdate(client, start);
             start = DateTimeUtils.getNextDay(start);
         }
     }
