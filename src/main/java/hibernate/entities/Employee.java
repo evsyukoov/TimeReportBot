@@ -32,6 +32,14 @@ public class Employee {
         return position;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void setPosition(String position) {
         this.position = position;
     }

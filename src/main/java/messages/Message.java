@@ -28,7 +28,7 @@ public class Message {
 
     public static final String APPROVE = "📝 Подтвердить";
 
-    public static final String DELIMETR = "/";
+    public static final String DELIMETR = "&";
 
     public static final String MENU = "Выберите действие";
 

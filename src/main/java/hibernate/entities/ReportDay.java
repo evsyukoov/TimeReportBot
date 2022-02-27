@@ -3,7 +3,8 @@ package hibernate.entities;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "report_days")
@@ -14,11 +15,9 @@ public class ReportDay {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "project")
-    private String project;
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL)
+    private Employee employee;
 
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -27,16 +26,7 @@ public class ReportDay {
     @Column(name = "uid")
     private long uid;
 
-    @Column(name = "extra_projects")
-    private String extraProjects;
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
+    private String projects;
 
     public Date getDate() {
         return date;
@@ -46,27 +36,35 @@ public class ReportDay {
         this.date = date;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public long getUid() {
         return uid;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     public void setUid(long uid) {
         this.uid = uid;
     }
 
-    public String getExtraProjects() {
-        return extraProjects;
+    public long getId() {
+        return id;
     }
 
-    public void setExtraProjects(String extraProjects) {
-        this.extraProjects = extraProjects;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getProjects() {
+        return projects;
+    }
+
+    public void setProjects(String projects) {
+        this.projects = projects;
     }
 }

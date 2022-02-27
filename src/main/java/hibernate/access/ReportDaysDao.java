@@ -1,7 +1,9 @@
 package hibernate.access;
 
 import hibernate.entities.Client;
+import hibernate.entities.Project;
 import hibernate.entities.ReportDay;
+import messages.Message;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -11,8 +13,7 @@ import utils.Utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReportDaysDao {
@@ -64,14 +65,12 @@ public class ReportDaysDao {
             List<ReportDay> dayList = query.getResultList();
             if (!dayList.isEmpty()) {
                 ReportDay rd = dayList.get(0);
-                rd.setProject(client.getProject());
-                rd.setExtraProjects(client.getExtraProjects());
+                rd.setProjects(getFinalProjects(client));
                 session.update(rd);
             } else {
                 ReportDay rd = new ReportDay();
-                rd.setName(client.getName());
-                rd.setProject(client.getProject());
-                rd.setExtraProjects(client.getExtraProjects());
+                rd.setEmployee(EmployeeDao.getEmployeeByName(client.getName()));
+                rd.setProjects(getFinalProjects(client));
                 rd.setUid(client.getUid());
                 // время ставим по МСК
                 rd.setDate(DateTimeUtils.fromLocalDate(client.getDateTime().toLocalDate()));
@@ -79,6 +78,26 @@ public class ReportDaysDao {
             }
             session.getTransaction().commit();
         }
+    }
+
+    private static String getFinalProjects(Client client) {
+        Set<Project> projects = new HashSet<>();
+        projects.add(ProjectsDao.getProjectById(client.getProject()));
+        Set<Project> extraProjects = null;
+        if (client.getExtraProjects() != null) {
+            extraProjects = getProjectsFromIds(client.getExtraProjects());
+        }
+        if (extraProjects != null && !extraProjects.isEmpty()) {
+            projects.addAll(extraProjects);
+        }
+        return projects.stream().map(Project::getProjectName)
+                .collect(Collectors.joining(Message.DELIMETR));
+    }
+
+    private static Set<Project> getProjectsFromIds(String extraProjects) {
+        return Arrays.stream(extraProjects.split(Message.DELIMETR))
+                .map(ProjectsDao::getProjectById)
+                .collect(Collectors.toSet());
     }
 
     public static void saveOrUpdate(Client client, Date date) {
@@ -92,14 +111,12 @@ public class ReportDaysDao {
             List<ReportDay> dayList = query.getResultList();
             if (!dayList.isEmpty()) {
                 ReportDay rd = dayList.get(0);
-                rd.setProject(client.getProject());
-                rd.setExtraProjects(client.getExtraProjects());
+                rd.setProjects(getFinalProjects(client));
                 session.update(rd);
             } else {
                 ReportDay rd = new ReportDay();
-                rd.setName(client.getName());
-                rd.setProject(client.getProject());
-                rd.setExtraProjects(client.getExtraProjects());
+                rd.setEmployee(EmployeeDao.getEmployeeByName(client.getName()));
+                rd.setProjects(getFinalProjects(client));
                 rd.setUid(client.getUid());
                 // время ставим по МСК
                 rd.setDate(date);

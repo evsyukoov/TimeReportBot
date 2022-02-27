@@ -51,11 +51,11 @@ public class ProjectsDao {
                 .collect(Collectors.toList());
     }
 
-    public static String getProjectById(String id) {
-        String project;
+    public static Project getProjectById(String id) {
+        Project project;
         try (Session session = factory.getCurrentSession()) {
             session.beginTransaction();
-            project = session.createQuery("SELECT projectName from Project WHERE id=:id", String.class)
+            project = session.createQuery("from Project WHERE id=:id", Project.class)
                                         .setParameter("id", Long.parseLong(id))
                                         .list()
                                         .stream()

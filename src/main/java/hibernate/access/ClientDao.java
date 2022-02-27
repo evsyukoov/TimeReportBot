@@ -108,10 +108,8 @@ public class ClientDao {
             client.setState(state);
             client.setProject(projects.get(0));
             if (projects.size() > 1) {
-                client.setExtraProjects(Message.DELIMETR.concat
-                        (String.join(Message.DELIMETR,
-                                projects.subList(1, projects.size()))
-                                .concat(Message.DELIMETR)));
+                client.setExtraProjects(String.join(Message.DELIMETR,
+                                projects.subList(1, projects.size())));
             }
             client.setDateTime(date);
             session.update(client);
